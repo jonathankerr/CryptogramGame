@@ -1,3 +1,5 @@
+package src;
+
 public class Cryptogram {
 	
 	String phrase = "HelloWorld";  //The phrase in which we will encrypt
