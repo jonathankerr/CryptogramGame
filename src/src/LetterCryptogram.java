@@ -1,5 +1,6 @@
 package src;
 
+import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -167,17 +168,26 @@ public class LetterCryptogram {
 				System.out.println("You have completed the cyrptogram good job!");
 				System.exit(0);
 			} else {
-				System.out.println("badjob");
-				System.exit(0);
+				System.out.println("You have failed to complete the crytogram, Resetting all the values and try again.");
+				currentLetter = 0;
+				userLetters.clear();
+				return;
 			}
 		System.out.println("Please enter a singular letter value for cyrptogram letter " + uniqueLetters.get(currentLetter));
 		value = readInput();
+		//Setting to lower case so switch doesn't break.
+		value.toLowerCase();
 		while(value.length() > 1 | value.length() == 0) {
-			if(value.equalsIgnoreCase("exit"))
-				System.exit(0);
-			if(value.equalsIgnoreCase("undo")) {
-				undo();
-				return;
+			switch(value) {
+				case ("exit"):
+					System.exit(0);
+					break;
+				case("undo"):
+					undo();
+					return;
+				case("clear"):
+					clear();
+					return;
 			}
 			System.out.println("Invalid input, Please enter a singular letter value for cyrptogram letter " + uniqueLetters.get(currentLetter));
 			value = readInput();
@@ -188,6 +198,8 @@ public class LetterCryptogram {
 	}
 
 	public void userCryptogram() {
+		if(currentLetter == 0)
+			return;
 		System.out.println("You current mapping is");
 		for(int i = 0; i <= currentLetter-1; i++) {
 			System.out.print(uniqueLetters.get(i) + " = " + userLetters.get(i) + " ");
@@ -196,10 +208,21 @@ public class LetterCryptogram {
 	}
 
 	public void undo () {
+		if (currentLetter == 0){
+			System.out.println("You cannot undo anymore letters");
+			return;
+	}
+		userLetters.remove(currentLetter-1);
 		currentLetter --;
 		System.out.println("You have undone your previous letter for the cryptogram.");
 		userCryptogram();
 
+	}
+
+	public void clear() {
+		System.out.println("Clearing all mappings");
+		currentLetter = 0;
+		userLetters.clear();
 	}
 
 	public boolean complete() {
