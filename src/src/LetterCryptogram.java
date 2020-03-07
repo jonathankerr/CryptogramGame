@@ -83,7 +83,7 @@ public class LetterCryptogram
 			}
 		}
 
-		System.out.println("Please enter a singular letter value for cyrptogram letter \'" + uniqueLetters.get(currentLetter)  + "\'...\n");
+		System.out.println("Please enter a singular letter value for cryptogram letter \'" + uniqueLetters.get(currentLetter)  + "\'...\n");
 		value = readInput().toLowerCase(); //Setting to lower case so switch doesn't break.
 
 		while (value.length() > 1 | value.length() == 0) 
@@ -103,7 +103,7 @@ public class LetterCryptogram
 					break;
 			}
 
-			System.out.println("Invalid input, please enter a singular letter value for cyrptogram letter \'" + uniqueLetters.get(currentLetter)  + "\'...\n");
+			System.out.println("Invalid input, please enter a singular letter value for cryptogram letter \'" + uniqueLetters.get(currentLetter)  + "\'...\n");
 			value = readInput();
 		}
 
@@ -268,7 +268,7 @@ public class LetterCryptogram
 			generationCheck = readInput();
 		}
 
-		System.out.println("Your cyrptogram is: \n");
+		System.out.println("Your cryptogram is: \n");
 	}
 
 	/**
