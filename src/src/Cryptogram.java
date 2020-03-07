@@ -1,12 +1,8 @@
-package src;
-
-public class Cryptogram {
-	
+/**
+ * Base class for cryptograms.
+ */
+public class Cryptogram 
+{	
 	String phrase = "HelloWorld";  //The phrase in which we will encrypt
-	
-	
-	
-	LetterCryptogram Crypto = new LetterCryptogram(phrase);
-
-	
+	LetterCryptogram crypto = new LetterCryptogram(phrase);
 }
