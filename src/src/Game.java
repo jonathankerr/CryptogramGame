@@ -27,7 +27,7 @@ public class Game
 	private void start() 
 	{
 		System.out.println("\nHello player, welcome to our cryptogram program!");
-		System.out.println("You can type the foloowing commands:\n- \"undo\"\n- \"clear\"\n- \"exit\"\n");
+		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"exit\"\n");
 		System.out.println("Please type \"generate\" to start...\n");
 
 		Scanner input = new Scanner(System.in);
@@ -165,7 +165,6 @@ public class Game
 				System.out.println("\n" + cryptogram.getEncryptedPhrase());
 				getMapping();
 				System.out.println("You have successfully completed the cryptogram!");
-					
 				System.exit(0);
 			}
 			else 
