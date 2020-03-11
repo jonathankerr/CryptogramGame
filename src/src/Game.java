@@ -169,7 +169,7 @@ public class Game
 			}
 			else 
 			{
-				System.out.println("You have failed to complete the cryptogram. All values will be now be reset...\n");
+				System.out.println("\nYou have failed to complete the cryptogram. All values will be now be reset...");
 				currentCharIndex = 0;
 				userGuesses.clear();
 			}
