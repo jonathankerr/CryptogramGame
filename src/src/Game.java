@@ -1,5 +1,9 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -177,6 +181,32 @@ public class Game
 
 		return false;
 	}
+
+	/**
+	 * Fetches a random phrase from a file.
+	 * 
+	 * @param fileName name of the file.
+	 * @return phrase to be encrypted and solved by user.
+	 */
+	private String fetchPhrase(String fileName)
+	{
+		String phrase = null;
+
+		try 
+		{
+			Random random = new Random();
+			ArrayList<String> result = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+
+			phrase = result.get(random.nextInt(result.size())).replaceAll("\\s+","").toLowerCase();
+		}
+		catch (IOException e)
+		{
+			System.out.println("\nFile does not exist, or invalid file name.");
+			System.exit(0);
+		}
+
+		return phrase;
+	}
 	
 	/**
 	 * Main method.
@@ -185,8 +215,10 @@ public class Game
 	 */
 	public static void main(String [] args)
 	{
-		cryptogram = new NumberCryptogram("helloworld");
 		Game game = new Game();
+		String phrase = game.fetchPhrase("Phrases/phrases.txt");
+
+		cryptogram = new NumberCryptogram(phrase);
 
 		cryptogram.createMapping();
 		game.start();

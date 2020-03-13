@@ -7,9 +7,8 @@ public class LetterCryptogram extends Cryptogram
 
 	/**
 	 * Class constructor.
-	 * Overrides base constructor.
 	 * 
-	 * @param phrase phrase that is encrypted.
+	 * @param phrase phrase that should be encrypted and solved by the user.
 	 */
 	public LetterCryptogram(String phrase) 
 	{

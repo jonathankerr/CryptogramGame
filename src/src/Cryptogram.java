@@ -17,7 +17,7 @@ public class Cryptogram
 	/**
 	 * Class constructor.
 	 * 
-	 * @param phrase phrase that should be encrypted and guessed by the user.
+	 * @param phrase phrase that should be encrypted and solved by the user.
 	 */
 	public Cryptogram(String phrase)
 	{
