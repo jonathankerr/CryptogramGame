@@ -14,11 +14,16 @@ public class Cryptogram
 	private ArrayList<Character> alphabetList;
 	private ArrayList<Character> uniqueChars; // List of unique character in the phrase.
 	private ArrayList<Character> uniqueEncryptedChars; // List of unique character in the phrase.
-	private HashMap<Character, Character> charMap;
+	private HashMap<Character, Character> charMap; // Hash map of each character in the phrase mapped to a random character from the "alphabetList".
 
-	protected String phrase;
-	private String encryptedPhrase;
+	protected String phrase; // Unencrypted phrase.
+	private String encryptedPhrase; // Encrypted phrase.
 
+	/**
+	 * Class constructor.
+	 * 
+	 * @param phrase phrase that should be encrypted and guessed by the user.
+	 */
 	public Cryptogram(String phrase)
 	{
 		alphabetList = new ArrayList<Character>();
@@ -34,7 +39,55 @@ public class Cryptogram
 		}
 	}
 
-	public boolean getCompletionStatus(int currentCharIndex, HashMap<Character, Character> userGuesses)
+	/**
+	 * Gets unique character in phrase by index.
+	 * 
+	 * @param currentCharIndex index of character user is currently guessing.
+	 * @return unique character.
+	 */
+	public char getChar(int currentCharIndex)
+	{
+		return Character.toUpperCase(uniqueChars.get(currentCharIndex));
+	}
+
+	/**
+	 * Gets unique character in encrypted phrase by index.
+	 * 
+	 * @param currentCharIndex index of character user is currently guessing.
+	 * @return unique encrypted character.
+	 */
+	public char getEncryptedChar(int currentCharIndex)
+	{
+		return Character.toUpperCase(uniqueEncryptedChars.get(currentCharIndex));
+	}
+
+	/**
+	 * Gets ecrypted phrase, with spaces in between every character.
+	 * 
+	 * @return encrypted phrase.
+	 */
+	public String getEncryptedPhrase()
+	{
+		return encryptedPhrase.replaceAll(".(?!$)", "$0 ");
+	}
+
+	/**
+	 * Gets list of unique characters in phrase.
+	 * 
+	 * @return list of unique character.
+	 */
+	public ArrayList<Character> getUniqueChars()
+	{
+		return uniqueChars;
+	}
+
+	/**
+	 * Determines whether cryptogram is completed
+	 * 
+	 * @param userGuesses Hash map of guesses for each character by the user.
+	 * @return true if cryptogram is completed, false if it is not.
+	 */
+	public boolean getCompletionStatus(HashMap<Character, Character> userGuesses)
 	{
 		boolean isCompleted = true;
 
@@ -49,29 +102,8 @@ public class Cryptogram
 				break;
 			}
 		} 
-		
 
 		return isCompleted;
-	}
-
-	public char getChar(int currentCharIndex)
-	{
-		return Character.toUpperCase(uniqueChars.get(currentCharIndex));
-	}
-
-	public char getEncryptedChar(int currentCharIndex)
-	{
-		return Character.toUpperCase(uniqueEncryptedChars.get(currentCharIndex));
-	}
-
-	public ArrayList<Character> getUniqueChars()
-	{
-		return uniqueChars;
-	}
-
-	public String getEncryptedPhrase()
-	{
-		return encryptedPhrase.replaceAll(".(?!$)", "$0 ");
 	}
 
 	/**

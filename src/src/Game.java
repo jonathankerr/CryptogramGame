@@ -160,7 +160,7 @@ public class Game
 	{
 		if (currentCharIndex == cryptogram.getUniqueChars().size())
 		{
-			if (cryptogram.getCompletionStatus(currentCharIndex, userGuesses))
+			if (cryptogram.getCompletionStatus(userGuesses))
 			{
 				System.out.println("\n" + cryptogram.getEncryptedPhrase());
 				getMapping();
