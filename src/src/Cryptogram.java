@@ -5,13 +5,8 @@ import java.util.HashMap;
 /**
  */
 public class Cryptogram 
-{	
-	protected char[] alphabet =
-	{ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-		'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' 
-	};
-
-	private ArrayList<Character> alphabetList;
+{
+	protected ArrayList<Character> alphabetList;
 	private ArrayList<Character> uniqueChars; // List of unique character in the phrase.
 	private ArrayList<Character> uniqueEncryptedChars; // List of unique character in the phrase.
 	private HashMap<Character, Character> charMap; // Hash map of each character in the phrase mapped to a random character from the "alphabetList".
@@ -32,11 +27,6 @@ public class Cryptogram
 		charMap = new HashMap<Character, Character>();
 
 		this.phrase = phrase;
-
-		for (char c : alphabet) 
-		{
-			alphabetList.add(c);
-		}
 	}
 
 	/**

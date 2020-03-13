@@ -1,9 +1,7 @@
-public class LetterCryptogram extends Cryptogram 
+public class NumberCryptogram extends Cryptogram 
 {	
 	private char[] alphabet = 
-	{ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-			'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' 
-	};
+	{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
 	/**
 	 * Class constructor.
@@ -11,7 +9,7 @@ public class LetterCryptogram extends Cryptogram
 	 * 
 	 * @param phrase phrase that is encrypted.
 	 */
-	public LetterCryptogram(String phrase) 
+	public NumberCryptogram(String phrase) 
 	{
 		super(phrase);
 

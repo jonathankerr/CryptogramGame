@@ -185,7 +185,7 @@ public class Game
 	 */
 	public static void main(String [] args)
 	{
-		cryptogram = new Cryptogram("helloworld");
+		cryptogram = new NumberCryptogram("helloworld");
 		Game game = new Game();
 
 		cryptogram.createMapping();
