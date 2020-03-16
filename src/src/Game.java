@@ -1,5 +1,7 @@
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +13,8 @@ import java.util.Scanner;
  */
 public class Game
 { 
-	//private Player currentPlayer;
+	//initlaise the current player 
+	private static Player currentPlayer;
 	private static Cryptogram cryptogram;
 
 	private HashMap<Character, Character> userGuesses;
@@ -40,7 +43,7 @@ public class Game
 
 		if (userInput.equals("exit"))
 		{
-			System.exit(0);
+			exit();
 		}
 
 		while (!userInput.equals("generate"))
@@ -50,7 +53,7 @@ public class Game
 
 			if (userInput.equals("exit"))
 			{
-				System.exit(0);
+				exit();
 			}
 		}	
 
@@ -66,6 +69,7 @@ public class Game
 
 			//input = new Scanner(System.in);
 			userInput = input.nextLine();
+			currentPlayer.incrementTotalGuesses();
 			char userGuess = ' ';
 
 			boolean inputRead = readInput(userInput);
@@ -98,7 +102,15 @@ public class Game
 			clear();
 			return true;
 		}
-			
+		else if (userInput.equals("exit"))
+		{
+			exit();
+		}
+		else if (userInput.equals("showStats"))
+		{
+			showStats();
+			return true; 
+		}	
 		return false;
 	}
 
@@ -169,19 +181,58 @@ public class Game
 				System.out.println("\n" + cryptogram.getEncryptedPhrase());
 				getMapping();
 				System.out.println("You have successfully completed the cryptogram!");
-				System.exit(0);
+				currentPlayer.incrementPlayedCryptograms();
+				currentPlayer.incrementCompletedCryptograms();	
+				exit();
 			}
 			else 
 			{
 				System.out.println("\nYou have failed to complete the cryptogram. All values will be now be reset...");
 				currentCharIndex = 0;
 				userGuesses.clear();
+				currentPlayer.incrementPlayedCryptograms();	
 			}
 		}
 
 		return false;
 	}
 
+	//Function to fetch the players data from a file and store it in objext currrent player
+	private static void fetchPlayers(String fileName) 
+	{
+		
+		try 
+		{
+			ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+			
+			//Converts Strings read from file to ints 
+			int x = Integer.parseInt(playerData.get(1));
+			int x1 = Integer.parseInt(playerData.get(2));
+			int x2 = Integer.parseInt(playerData.get(3));
+			int x3 = Integer.parseInt(playerData.get(4));
+			
+			//Constructs the current player object with information from file
+			currentPlayer = new Player(playerData.get(0),x,x1,x2,x3); 
+		
+		}
+		catch (IOException e)
+		
+		{
+			System.out.println("\nFile does not exist, or invalid file name.");
+			System.exit(0);
+		}
+	}
+	//Function to print functions to the code
+	private static void showStats() {
+
+		System.out.println("Your username is " + currentPlayer.getUsername());
+		System.out.println("Your accuracy is " + currentPlayer.getAccuracy() );
+		System.out.println("Your total guesses is " + currentPlayer.getTotalGuesses());
+		System.out.println("Your total attempted cryptograms is " + currentPlayer.getPlayedCryptograms());
+		System.out.println("Your total correctly completed cryptograms is "+ currentPlayer.getCompletedCryptograms());
+		
+	}
+	
 	/**
 	 * Fetches a random phrase from a file.
 	 * 
@@ -202,11 +253,58 @@ public class Game
 		catch (IOException e)
 		{
 			System.out.println("\nFile does not exist, or invalid file name.");
-			System.exit(0);
+			exit();
 		}
 
 		return phrase;
 	}
+	//Fileto clear the file of previous data
+	public void clearFile(String fileName) throws IOException {
+	    FileOutputStream outputStream = new FileOutputStream(fileName);
+	    byte[] strToBytes = "".getBytes();
+	    outputStream.write(strToBytes);
+
+	}
+	//Function to write Strings to the file
+	public void writeToFile(String fileName,String message) throws IOException {
+			    String str = message;
+			    FileOutputStream outputStream = new FileOutputStream(fileName, true);
+			    byte[] strToBytes = str.getBytes();
+			    outputStream.write(strToBytes);
+			    outputStream.write(System.getProperty("line.separator").getBytes());
+			    outputStream.close();
+			}
+	//Function to write ints to the file
+	public void writeToFileInt(String fileName,int message) throws IOException {
+	    int str = message;
+	    FileOutputStream outputStream = new FileOutputStream(fileName, true);
+	    outputStream.write(String.valueOf(message).getBytes());
+	    outputStream.write(System.getProperty("line.separator").getBytes());
+	    outputStream.close();
+	}	
+	//Funnction run when program ends
+	private void exit() {
+		//Clears the file of any data then writes the players current data into file
+		try 
+		{
+			clearFile("Players/players.txt");
+			writeToFile("Players/players.txt",currentPlayer.getUsername());
+			writeToFileInt("Players/players.txt",currentPlayer.getTotalGuesses());
+			writeToFileInt("Players/players.txt",currentPlayer.getTotalGuesses());
+			writeToFileInt("Players/players.txt",currentPlayer.getPlayedCryptograms());
+			writeToFileInt("Players/players.txt",currentPlayer.getCompletedCryptograms());
+		}
+		catch(IOException e)
+		//If file not found
+		{
+			System.out.println("\nCannot find players files to save data lost all current data is lost.");
+			System.exit(0);
+		}
+		
+		
+		System.exit(0);
+	}
+	
 	
 	/**
 	 * Main method.
@@ -217,7 +315,7 @@ public class Game
 	{
 		Game game = new Game();
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
-
+		fetchPlayers("Players/players.txt");
 		cryptogram = new NumberCryptogram(phrase);
 
 		cryptogram.createMapping();
