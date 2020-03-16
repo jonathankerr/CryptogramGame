@@ -4,36 +4,48 @@
 public class Player 
 {
 	private String username;
-	private float accuracy;
+	private int correctGuesses;
 	private int totalGuesses;
 	private int playedCryptograms;
 	private int completedCryptograms;
 	
-	/**
-	 * Gets player's accuracy.
-	 * 
-	 * @return player's accuracy.
-	 */
-	public float getAccuracy()
-	{
-		return accuracy;
+	public Player(String string, int i, int j, int k, int l) {
+		
+	
+	  username = string;
+	  correctGuesses = i;
+	  totalGuesses = j;
+	  playedCryptograms = k;
+	  completedCryptograms = l;
 	}
 	
-	/**
-	 * Sets player's accuracy.
-	 * 
-	 * @param accuracy target accuracy.
-	 */
-	public void setAccuracy(int accuracy)
+	public float getAccuracy()
 	{
-		this.accuracy = accuracy;
+		return (correctGuesses/totalGuesses)*100;
 	}
+	
+	public void  incrementCorrectGuesses()
+	{
+		correctGuesses++;
+	}
+	
+	public void  incrementTotalGuesses()
+	{
+		totalGuesses++;
+	}
+	
+	public int getTotalGuesses()
+	{
+		return totalGuesses;
+	}
+	
 	
 	/**
 	 * Gets number of cryptograms played.
 	 * 
 	 * @return number of cryptograms played.
 	 */
+	
 	public int getPlayedCryptograms()
 	{
 		return playedCryptograms;
@@ -63,5 +75,13 @@ public class Player
 	public void incrementCompletedCryptograms()
 	{
 		completedCryptograms++;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
