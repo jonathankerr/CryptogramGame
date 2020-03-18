@@ -32,7 +32,7 @@ public class Game
 	 */
 	private void start() 
 	{
-		System.out.println("\nHello player, welcome to our cryptogram program!");
+		System.out.println("\nHello " + currentPlayer.getUsername() + ", welcome to our cryptogram program!");
 		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"stats\"\n- \"exit\"\n");
 		System.out.println("Please type \"generate\" to start...\n");
 
@@ -210,7 +210,7 @@ public class Game
 	}
 
 	/**
-	 * Runs when the game ends.
+	 * Runs when the game ends. Writes data of one player to a file.
 	 */
 	private void exit() 
 	{
@@ -218,13 +218,13 @@ public class Game
 		try 
 		{
 			clearFile("Players/players");
-			writeToFile("Players/players",currentPlayer.getUsername());
-			writeToFileInt("Players/players",currentPlayer.getTotalGuesses());
-			writeToFileInt("Players/players",currentPlayer.getTotalGuesses());
-			writeToFileInt("Players/players",currentPlayer.getPlayedCryptograms());
-			writeToFileInt("Players/players",currentPlayer.getCompletedCryptograms());
+			writeToFile("Players/players", currentPlayer.getUsername());
+			writeToFileInt("Players/players", currentPlayer.getTotalGuesses());
+			writeToFileInt("Players/players", currentPlayer.getTotalGuesses());
+			writeToFileInt("Players/players", currentPlayer.getPlayedCryptograms());
+			writeToFileInt("Players/players", currentPlayer.getCompletedCryptograms());
 		}
-		catch(IOException e) // If file not found
+		catch (IOException e) // If file not found
 		{
 			System.out.println("\nCannot find players files to save data lost all current data is lost.");
 			System.exit(0);
