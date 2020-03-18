@@ -200,7 +200,6 @@ public class Game
 	//Function to fetch the players data from a file and store it in objext currrent player
 	private static void fetchPlayers(String fileName) 
 	{
-		
 		try 
 		{
 			ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
@@ -211,12 +210,11 @@ public class Game
 			int x2 = Integer.parseInt(playerData.get(3));
 			int x3 = Integer.parseInt(playerData.get(4));
 			
-			//Constructs the current player object with information from file
+			// Constructs the current player object with information from file
 			currentPlayer = new Player(playerData.get(0),x,x1,x2,x3); 
 		
 		}
 		catch (IOException e)
-		
 		{
 			System.out.println("\nFile does not exist, or invalid file name.");
 			System.exit(0);
@@ -315,7 +313,7 @@ public class Game
 	{
 		Game game = new Game();
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
-		fetchPlayers("Players/players.txt");
+		fetchPlayers("Players/players");
 		cryptogram = new NumberCryptogram(phrase);
 
 		cryptogram.createMapping();
