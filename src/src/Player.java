@@ -21,8 +21,9 @@ public class Player
 	
 	public float getAccuracy()
 	{
-		return (correctGuesses/totalGuesses)*100;
-	}
+		if(totalGuesses == 0)
+			return 0;
+		else return (correctGuesses/totalGuesses)*100;
 	
 	public void  incrementCorrectGuesses()
 	{
