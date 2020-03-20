@@ -1,7 +1,6 @@
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,6 +83,7 @@ public class Game
 				currentPlayer.incrementTotalGuesses();
 			}
 		}
+		input.close();
 	}
 
 	private void changeUserName() {
@@ -98,6 +98,7 @@ public class Game
 			}
 			else
 				System.out.println("Username has not be changed");
+		input.close();
 	}	
 	
 	
@@ -262,6 +263,7 @@ public class Game
 		byte[] strToBytes = "".getBytes();
 		
 	    outputStream.write(strToBytes);
+	    outputStream.close();
 	}
 
 	/**
@@ -283,7 +285,6 @@ public class Game
 	 */
 	public static void writeToFileInt(String fileName,int message) throws IOException 
 	{
-	    int str = message;
 		FileOutputStream outputStream = new FileOutputStream(fileName, true);
 		
 	    outputStream.write(String.valueOf(message).getBytes());
