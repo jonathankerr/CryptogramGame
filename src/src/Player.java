@@ -19,11 +19,12 @@ public class Player
 	  completedCryptograms = l;
 	}
 	
-	public float getAccuracy()
+	public double getAccuracy()
 	{
 		if(totalGuesses == 0)
 			return 0;
-		else return (correctGuesses/totalGuesses)*100;
+		else return ((double) correctGuesses/(double)totalGuesses *100);
+	}
 	
 	public void  incrementCorrectGuesses()
 	{
@@ -40,7 +41,10 @@ public class Player
 		return totalGuesses;
 	}
 	
-	
+	public int getCorrectGuesses()
+	{
+		return correctGuesses;
+	}
 	/**
 	 * Gets number of cryptograms played.
 	 * 
