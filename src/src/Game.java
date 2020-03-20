@@ -236,7 +236,7 @@ public class Game
 	/**
 	 * Clears all data in file.
 	 */
-	public void clearFile(String fileName) throws IOException 
+	public static void clearFile(String fileName) throws IOException 
 	{
 	    FileOutputStream outputStream = new FileOutputStream(fileName);
 		byte[] strToBytes = "".getBytes();
@@ -247,7 +247,7 @@ public class Game
 	/**
 	 * Writes a string in a file.
 	 */
-	public void writeToFile(String fileName,String message) throws IOException 
+	public static void writeToFile(String fileName,String message) throws IOException 
 	{
 		String str = message;
 		FileOutputStream outputStream = new FileOutputStream(fileName, true);
@@ -261,7 +261,7 @@ public class Game
 	/**
 	 * Writes an integer to a file.
 	 */
-	public void writeToFileInt(String fileName,int message) throws IOException 
+	public static void writeToFileInt(String fileName,int message) throws IOException 
 	{
 	    int str = message;
 		FileOutputStream outputStream = new FileOutputStream(fileName, true);
@@ -302,8 +302,9 @@ public class Game
 	 * 
 	 * @param fileName name of the file.
 	 * @return phrase to be encrypted and solved by user.
+	 * @throws IOException 
 	 */
-	private static Player fetchPlayers(String fileName) 
+	private static Player fetchPlayers(String fileName) throws IOException 
 	{
 		Player player = null;
 
@@ -319,7 +320,18 @@ public class Game
 			
 			// Constructs the current player object with information from file
 			player = new Player(playerData.get(0),x,x1,x2,x3); 
-		
+			}
+			catch(java.lang.IndexOutOfBoundsException e) {
+				System.out.println("Insifficent Data in player file pls restart exit and relaunch ");
+				
+				clearFile("Players/players");
+				writeToFile("Players/players", "User");
+				writeToFileInt("Players/players", 0);
+				writeToFileInt("Players/players", 0);
+				writeToFileInt("Players/players", 0);
+				writeToFileInt("Players/players", 0);
+				System.exit(0);
+			
 		}
 		catch (IOException e)
 		{
@@ -334,8 +346,9 @@ public class Game
 	 * Main method.
 	 * 
 	 * @param args command-line arguents.
+	 * @throws IOException 
 	 */
-	public static void main(String [] args)
+	public static void main(String [] args) throws IOException
 	{
 		Game game = new Game();
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
