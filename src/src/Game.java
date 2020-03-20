@@ -79,8 +79,13 @@ public class Game
 			{
 				userGuess = userInput.charAt(0);
 				userGuesses.put(cryptogram.getEncryptedChar(currentCharIndex), userGuess);
+				char x6 = Character.toLowerCase(cryptogram.getChar(currentCharIndex));
+				if(userGuess == x6) {
+					currentPlayer.incrementCorrectGuesses();
+				}
 				currentCharIndex++;
 				currentPlayer.incrementTotalGuesses();
+				
 			}
 		}
 		input.close();
@@ -196,7 +201,8 @@ public class Game
 	private static void showStats() 
 	{
 		System.out.println("Your username is " + currentPlayer.getUsername());
-		System.out.println("Your accuracy is " + currentPlayer.getAccuracy() );
+		System.out.printf("Your accuracy is %f\n",currentPlayer.getAccuracy());
+		System.out.println("Your total correct guesses is " + currentPlayer.getCorrectGuesses());
 		System.out.println("Your total guesses is " + currentPlayer.getTotalGuesses());
 		System.out.println("Your total attempted cryptograms is " + currentPlayer.getPlayedCryptograms());
 		System.out.println("Your total correctly completed cryptograms is "+ currentPlayer.getCompletedCryptograms());
@@ -240,7 +246,7 @@ public class Game
 		{
 			clearFile("Players/players");
 			writeToFile("Players/players", currentPlayer.getUsername());
-			writeToFileInt("Players/players", currentPlayer.getTotalGuesses());
+			writeToFileInt("Players/players", currentPlayer.getCorrectGuesses());
 			writeToFileInt("Players/players", currentPlayer.getTotalGuesses());
 			writeToFileInt("Players/players", currentPlayer.getPlayedCryptograms());
 			writeToFileInt("Players/players", currentPlayer.getCompletedCryptograms());
