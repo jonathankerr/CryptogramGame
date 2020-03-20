@@ -86,6 +86,22 @@ public class Game
 		}
 	}
 
+	private void changeUserName() {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Your current user name is " + currentPlayer.getUsername());
+		System.out.println("Would you like to change it [Y/N]");
+		String userChoice = input.nextLine();
+		if(userChoice.equals("Y")) {
+			System.out.println("Please enter a new username");
+			String userName = input.nextLine();
+			currentPlayer.setUsername(userName);
+			}
+			else
+				System.out.println("Username has not be changed");
+	}	
+	
+	
+	
 	/**
 	 * Gets user input from terminal.
 	 */
@@ -110,7 +126,11 @@ public class Game
 		{
 			exit();
 		}
-
+		else if (userInput.equals("name"))
+		{
+			changeUserName();
+			return true;
+		}
 		return false;
 	}
 
