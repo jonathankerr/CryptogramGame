@@ -20,7 +20,7 @@ public class Game
 
 	private int currentCharIndex;
 
-	private Game()
+	public Game()
 	{
 		userGuesses = new HashMap<Character, Character>();
 		currentCharIndex = 0;
