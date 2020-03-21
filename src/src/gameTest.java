@@ -1,5 +1,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,6 +12,7 @@ class gameTest {
 	protected Player testPlayer  = new Player("Test",2,4,8,1);
 	protected Cryptogram testNCryptogram = new NumberCryptogram("Test");
 	protected Cryptogram testLCryptogram = new LetterCryptogram("Test");
+	protected Game testgame = new Game();
 
 	@BeforeEach
 	void setUp(){
@@ -91,6 +97,15 @@ class gameTest {
 			
 		}
 	}
+
+@Test
+void testGame() throws IOException {
+	testgame.clearFile("Players/test");
+	testgame.writeToFile("Players/test", "Test");
+	testgame.writeToFileInt("Players/test", 123);
+	ArrayList<String> testData = new ArrayList(Files.readAllLines(Paths.get("Players/test")));
+	assertTrue(testData.get(0).equals("Test"));
+	assertTrue(testData.get(1).equals("123"));
 	
-	
+}
 }
