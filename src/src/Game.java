@@ -103,7 +103,6 @@ public class Game
 			}
 			else
 				System.out.println("Username has not be changed");
-		input.close();
 	}	
 	
 	
