@@ -16,9 +16,9 @@ public class Game
 	private static Player currentPlayer;
 	private static Cryptogram cryptogram;
 
-	private HashMap<Character, Character> userGuesses;
+	private static HashMap<Character, Character> userGuesses;
 
-	private int currentCharIndex;
+	private static int currentCharIndex;
 
 	public Game()
 	{
@@ -138,7 +138,32 @@ public class Game
 		}
 		return false;
 	}
-
+	
+	
+	private static void ifLoad(HashMap<Character, Character> userGuesses) throws IOException {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Would u like to load previous game");
+		String userChoice = input.nextLine();
+		if(userChoice.equals("Y")) {
+			
+			try {
+				ArrayList <String> x = fetchPrevGame("Players/prevGame");
+				cryptogram.setPhrase(x.get(0));
+				cryptogram.setEncryptedPhrase(x.get(1),x.get(0));
+				for(int z = 0;z<x.get(2).length();z++)
+				{
+					userGuesses.put(x.get(2).charAt(z), x.get(3).charAt(z));
+					currentCharIndex++;
+				}
+				}
+				catch(java.lang.IndexOutOfBoundsException e) {
+					System.out.println("No previious session");
+					System.exit(0);
+			}
+		
+		}
+	
+	}
 	/**
 	 * Prints out the generated cryptogram.
 	 */
@@ -187,6 +212,7 @@ public class Game
 	/**
 	 * Undoes all actions.
 	 */
+	
 	private void clear() 
 	{
 		System.out.println("All actions cleared");
@@ -249,6 +275,20 @@ public class Game
 			writeToFileInt("Players/players", currentPlayer.getTotalGuesses());
 			writeToFileInt("Players/players", currentPlayer.getPlayedCryptograms());
 			writeToFileInt("Players/players", currentPlayer.getCompletedCryptograms());
+			
+			String s = "";
+			String t = "";
+			for(Character c : userGuesses.keySet()) {
+			s = s +c;
+			t = t + userGuesses.get(c);
+			}
+			String ecrypt =cryptogram.getEncryptedPhrase();
+			String ecryptNoWhiteSpace = ecrypt.replaceAll("\\s","");
+			clearFile("Players/prevGame");
+			writeToFile("Players/prevGame",cryptogram.getPhrase());
+			writeToFile("Players/prevGame",ecryptNoWhiteSpace);
+			writeToFile("Players/prevGame",s);
+			writeToFile("Players/prevGame",t);
 		}
 		catch (IOException e) // If file not found
 		{
@@ -368,6 +408,33 @@ public class Game
 
 		return player;
 	}
+	private static ArrayList<String> fetchPrevGame(String fileName) throws IOException 
+	{
+		try
+		{
+			ArrayList<String> prevData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+			return prevData;
+		}
+		catch(java.lang.IndexOutOfBoundsException e) {
+			
+			System.out.println("No Previous session");
+			clearFile("Players/prevG");
+			System.exit(0);
+		}
+		
+		catch(IOException e)
+		{
+			System.out.println("No Previous session");
+			clearFile("Players/prevGame");
+			System.exit(0);
+			
+			
+		}
+		return null;
+	}
+	
+	
+	
 	
 	/**
 	 * Main method.
@@ -381,8 +448,9 @@ public class Game
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
 		currentPlayer = fetchPlayers("Players/players");
 		cryptogram = new NumberCryptogram(phrase);
-
 		cryptogram.createMapping();
+		ifLoad(userGuesses);
 		game.start();
 	}
+
 }
