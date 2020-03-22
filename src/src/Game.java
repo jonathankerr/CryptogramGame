@@ -34,7 +34,7 @@ public class Game
 	private void start() 
 	{
 		System.out.println("\nHello " + currentPlayer.getUsername() + ", welcome to our cryptogram program!");
-		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"stats\"\n- \"exit\"\n");
+		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"stats\"\n- \"exit\"\n- \"name\"\n");
 		System.out.println("Please type \"generate\" to start...\n");
 
 		Scanner input = new Scanner(System.in);
@@ -90,26 +90,9 @@ public class Game
 				
 			}
 		}
+
 		input.close();
 	}
-
-	/**
-	 * Changes username of user depending on input.
-	 */
-	private void changeUserName() 
-	{
-		Scanner input = new Scanner(System.in);
-		System.out.println("Your current user name is " + currentPlayer.getUsername());
-		System.out.println("Would you like to change it [Y/N]");
-		String userChoice = input.nextLine();
-		if(userChoice.equals("Y")) {
-			System.out.println("Please enter a new username");
-			String userName = input.nextLine();
-			currentPlayer.setUsername(userName);
-			}
-			else
-				System.out.println("Username has not be changed");
-	}	
 	
 	/**
 	 * Gets user input from terminal.
@@ -128,17 +111,17 @@ public class Game
 		}
 		else if (userInput.equals("stats"))
 		{
-			showStats();
+			showStats(currentPlayer);
 			return true; 
 		}	
-		else if (userInput.equals("exit"))
-		{
-			exit();
-		}
 		else if (userInput.equals("name"))
 		{
 			changeUserName();
 			return true;
+		}
+		else if (userInput.equals("exit"))
+		{
+			exit();
 		}
 
 		return false;
@@ -203,15 +186,44 @@ public class Game
 	/**
 	 * Shows the current player's statistics.
 	 */
-	private static void showStats() 
+	private static void showStats(Player player) 
 	{
-		System.out.println("Your username is " + currentPlayer.getUsername());
-		System.out.printf("Your accuracy is %f\n",currentPlayer.getAccuracy());
-		System.out.println("Your total correct guesses is " + currentPlayer.getCorrectGuesses());
-		System.out.println("Your total guesses is " + currentPlayer.getTotalGuesses());
-		System.out.println("Your total attempted cryptograms is " + currentPlayer.getPlayedCryptograms());
-		System.out.println("Your total correctly completed cryptograms is "+ currentPlayer.getCompletedCryptograms());
+		System.out.println("\nHello, " + currentPlayer.getUsername() + ".");
+		System.out.println("+----------------------+------+");
+		System.out.println("| Stats                | Val. |");
+		System.out.println("+----------------------+------+");
+		System.out.println("+ This game: ----------+------+");
+		System.out.format("| %-20s | %-4s |", "Guesses:", player.getTotalGuesses()); System.out.println();
+		System.out.format("| %-20s | %-4s |", "Correct guesses", player.getCorrectGuesses()); System.out.println();
+		System.out.format("| %-20s | %-4s |", "Accuracy:", (Integer.toString((int)player.getAccuracy()) + "%")); System.out.println();
+		System.out.println("+ All games: ----------+------+");
+		System.out.format("| %-20s | %-4s |", "Sessions:", player.getPlayedCryptograms()); System.out.println();
+		System.out.format("| %-20s | %-4s |", "Completed sessions:", player.getTotalGuesses()); System.out.println();
+		System.out.println("+----------------------+------+");
 	}
+
+	/**
+	 * Changes username of user depending on input.
+	 */
+	private void changeUserName() 
+	{
+		Scanner input = new Scanner(System.in);
+		System.out.println("Your current user name is " + currentPlayer.getUsername());
+		System.out.println("Would you like to change it? [Y/N]");
+		String userChoice = input.nextLine();
+
+		if (userChoice.toUpperCase().equals("Y")) 
+		{
+			System.out.println("Please enter a new username...\n");
+			String userName = input.nextLine();
+			currentPlayer.setUsername(userName);
+			System.out.println("Username changed to: \"" + currentPlayer.getUsername() + "\".\n");
+		}
+		else
+		{
+			System.out.println("Username has not beem changed.\n");
+		}
+	}	
 
 	/**
 	 * Determines whether user has completed the game.

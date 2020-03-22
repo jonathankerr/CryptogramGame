@@ -21,9 +21,14 @@ public class Player
 	
 	public double getAccuracy()
 	{
-		if(totalGuesses == 0)
+		if (totalGuesses == 0)
+		{
 			return 0;
-		else return ((double) correctGuesses/(double)totalGuesses *100);
+		}
+		else 
+		{
+			return ((double) correctGuesses/(double)totalGuesses * 100);
+		}
 	}
 	
 	public void  incrementCorrectGuesses()
@@ -45,12 +50,12 @@ public class Player
 	{
 		return correctGuesses;
 	}
+
 	/**
 	 * Gets number of cryptograms played.
 	 * 
 	 * @return number of cryptograms played.
 	 */
-	
 	public int getPlayedCryptograms()
 	{
 		return playedCryptograms;
