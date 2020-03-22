@@ -39,7 +39,15 @@ public class Cryptogram
 	{
 		return Character.toUpperCase(uniqueChars.get(currentCharIndex));
 	}
-
+	public String getPhrase()
+	{
+		return phrase;
+	}
+	public void setPhrase(String Phrase)
+	{
+		this.phrase = Phrase;
+		
+	}
 	/**
 	 * Gets unique character in encrypted phrase by index.
 	 * 
@@ -60,12 +68,37 @@ public class Cryptogram
 	{
 		return encryptedPhrase.replaceAll(".(?!$)", "$0 ");
 	}
+	public void setEncryptedPhrase(String Phase,String nValues)
+	{
+		ArrayList<Character> newUChars = makeUChars(Phase) ;
+		this.uniqueEncryptedChars = newUChars;
+		this.encryptedPhrase = Phase;
+		charMap.clear();
+		this.uniqueChars = makeUChars(this.phrase);
+		for(int i = 0;i<uniqueChars.size();i++) {
+			charMap.put(uniqueChars.get(i),uniqueEncryptedChars.get(i));
+		}
+	}
 
 	/**
 	 * Gets list of unique characters in phrase.
 	 * 
 	 * @return list of unique character.
 	 */
+	
+	
+	public ArrayList<Character>  makeUChars(String Phrase) { 
+	ArrayList<Character> knownChars = new ArrayList<Character>();
+	for (char c : Phrase.toCharArray()) 
+	{
+		if (!knownChars.contains(c))
+		{
+			knownChars.add(c);
+		}
+	}
+	return knownChars;
+	
+	}
 	public ArrayList<Character> getUniqueChars()
 	{
 		return uniqueChars;
@@ -80,10 +113,10 @@ public class Cryptogram
 	public boolean getCompletionStatus(HashMap<Character, Character> userGuesses)
 	{
 		boolean isCompleted = true;
-
 		for (Character c : charMap.keySet())
 		{
 			char value = Character.toLowerCase(userGuesses.get(charMap.get(c)));  
+			
 
 			if (c != value)
 			{
