@@ -362,6 +362,7 @@ public class Game
 		catch (IOException e)
 		{
 			System.out.println("\nFile does not exist, or invalid file name.");
+			clearFile("Players/players");
 			System.exit(0);
 		}
 
