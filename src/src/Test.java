@@ -6,21 +6,24 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class gameTest {
+class Test 
+{
 	protected Player testPlayer  = new Player("Test",2,4,8,1);
 	protected Cryptogram testNCryptogram = new NumberCryptogram("Test");
 	protected Cryptogram testLCryptogram = new LetterCryptogram("Test");
 	protected Game testgame = new Game();
 
 	@BeforeEach
-	void setUp(){
+	void setUp()
+	{
 		//Tests to see if any errors occur when calling createMapping()
 		testNCryptogram.createMapping();
 		testLCryptogram.createMapping();
 	}
 	
 	@Test
-	void testPlayer() {
+	void testPlayer() 
+	{
 		//Testing player getters
 		assertTrue(testPlayer.getUsername() == "Test");
 		assertTrue(testPlayer.getCorrectGuesses() == 2);
@@ -49,11 +52,11 @@ class gameTest {
 		assertTrue(temp3 == (testPlayer.getTotalGuesses())-1);
 		assertTrue(temp4 ==  (testPlayer.getCompletedCryptograms())-1);
 		assertTrue(temp5 ==  (testPlayer.getPlayedCryptograms())-1);
-		}
-		
+	}	
 	
 	@Test
-	void testNcryptogram() {
+	void testNcryptogram() 
+	{
 		//Tests getChar by comparing it to the phrase used for test
 		assertTrue(testNCryptogram.getChar(0) == 'T');
 		assertTrue(testNCryptogram.getChar(1) == 'E');
@@ -85,11 +88,12 @@ class gameTest {
 		s.add('0');
 		s.add('1');
 		s.add('9');
-		assertTrue(testNCryptogram.getuniqueEncryptedChars().equals(s));
-		
+		assertTrue(testNCryptogram.getuniqueEncryptedChars().equals(s));	
 	}
+
 	@Test
-	void testLcryptogram() {
+	void testLcryptogram() 
+	{
 		//Tests getChar by comparing it to the phrase used for test
 		assertTrue(testLCryptogram.getChar(0) == 'T');
 		assertTrue(testLCryptogram.getChar(1) == 'E');
@@ -104,7 +108,8 @@ class gameTest {
 		}
 		//Test getUniqueChars by comparing it with a array that has all of the unique chars from phrase Test
 		Character[] x = {'T', 'e', 's'};
-		for(int t = 0;t<3;t++) {
+		for (int t = 0;t<3;t++) 
+		{
 			assertTrue(testLCryptogram.getUniqueChars().get(t) == x[t]);
 			//Testing Setters for testLCryptogram
 			testNCryptogram.setPhrase("test");
@@ -124,15 +129,16 @@ class gameTest {
 		}
 	}
 
-@Test
-void testGame() throws IOException {
-	testgame.clearFile("Players/test");
-	testgame.writeToFile("Players/test", "Test");
-	testgame.writeToFileInt("Players/test", 123);
-	ArrayList<String> testData = new ArrayList(Files.readAllLines(Paths.get("Players/test")));
-	assertTrue(testData.get(0).equals("Test"));
-	assertTrue(testData.get(1).equals("123"));
-	
-	
-}
+	@Test
+	void testGame() throws IOException 
+	{
+		testgame.clearFile("Players/test");
+		testgame.writeToFile("Players/test", "Test");
+		testgame.writeToFileInt("Players/test", 123);
+		ArrayList<String> testData = new ArrayList(Files.readAllLines(Paths.get("Players/test")));
+		assertTrue(testData.get(0).equals("Test"));
+		assertTrue(testData.get(1).equals("123"));
+		
+		
+	}
 }
