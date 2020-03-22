@@ -41,20 +41,14 @@ public class Game
 		String userInput = input.nextLine();
 		//input.close();
 
-		if (userInput.equals("exit"))
-		{
-			exit();
-		}
+		readInput(userInput, false);
 
 		while (!userInput.equals("generate"))
 		{
 			System.out.println("Invalid input, please type \"generate\" to start...\n");
 			userInput = input.nextLine();
 
-			if (userInput.equals("exit"))
-			{
-				exit();
-			}
+			readInput(userInput, false);
 		}	
 
 		System.out.println();
@@ -71,7 +65,7 @@ public class Game
 			userInput = input.nextLine();
 			
 			char userGuess = ' ';
-			boolean inputRead = readInput(userInput);
+			boolean inputRead = readInput(userInput, true);
 			
 			if (!inputRead && (userInput.length() > 1 || userInput.length() == 0)) 
 			{
@@ -82,9 +76,12 @@ public class Game
 				userGuess = userInput.charAt(0);
 				userGuesses.put(cryptogram.getEncryptedChar(currentCharIndex), userGuess);
 				char x6 = Character.toLowerCase(cryptogram.getChar(currentCharIndex));
-				if(userGuess == x6) {
+				
+				if (userGuess == x6) 
+				{
 					currentPlayer.incrementCorrectGuesses();
 				}
+
 				currentCharIndex++;
 				currentPlayer.incrementTotalGuesses();
 				
@@ -97,17 +94,31 @@ public class Game
 	/**
 	 * Gets user input from terminal.
 	 */
-	private boolean readInput(String userInput) 
+	private boolean readInput(String userInput, boolean inGame) 
 	{
 		if (userInput.equals("undo"))
 		{
-			undo();
-			return true;
+			if (inGame)
+			{
+				undo();
+				return true;
+			}
+			else
+			{
+				System.out.println("You must be solving a cryptogram in order to use this command.");
+			}
 		}
 		else if (userInput.equals("clear"))
 		{
-			clear();
-			return true;
+			if (inGame)
+			{
+				clear();
+				return true;
+			}
+			else
+			{
+				System.out.println("You must be solving a cryptogram in order to use this command.");
+			}
 		}
 		else if (userInput.equals("stats"))
 		{
@@ -184,7 +195,7 @@ public class Game
 	}
 
 	/**
-	 * Shows the current player's statistics.
+	 * Shows the current player's statistics in tabular form.
 	 */
 	private static void showStats(Player player) 
 	{
