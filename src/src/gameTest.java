@@ -51,7 +51,6 @@ class gameTest {
 		assertTrue(temp3 == (testPlayer.getTotalGuesses())-1);
 		assertTrue(temp4 ==  (testPlayer.getCompletedCryptograms())-1);
 		assertTrue(temp5 ==  (testPlayer.getPlayedCryptograms())-1);
-		
 		}
 		
 	
@@ -74,6 +73,21 @@ class gameTest {
 		for(int t = 0;t<3;t++) {
 			assertTrue(testNCryptogram.getUniqueChars().get(t) == x[t]);
 		}
+		//Testing Setters for testNCryptogram
+		testNCryptogram.setPhrase("test");
+		testNCryptogram.setEncryptedPhrase("0190", "");
+		assertTrue(testNCryptogram.getEncryptedPhrase().equals("0 1 9 0"));
+		// testing getters
+		ArrayList<Character> r = new ArrayList<Character>() ;
+		r.add('t');
+		r.add('e');
+		r.add('s');
+		assertTrue(testNCryptogram.getUniqueChars().equals(r));
+		ArrayList<Character> s = new ArrayList<Character>() ;
+		s.add('0');
+		s.add('1');
+		s.add('9');
+		assertTrue(testNCryptogram.getuniqueEncryptedChars().equals(s));
 		
 	}
 	@Test
@@ -94,7 +108,21 @@ class gameTest {
 		Character[] x = {'T', 'e', 's'};
 		for(int t = 0;t<3;t++) {
 			assertTrue(testLCryptogram.getUniqueChars().get(t) == x[t]);
-			
+			//Testing Setters for testLCryptogram
+			testNCryptogram.setPhrase("test");
+			testNCryptogram.setEncryptedPhrase("0190", "");
+			assertTrue(testNCryptogram.getEncryptedPhrase().equals("0 1 9 0"));
+			// testing getters
+			ArrayList<Character> r = new ArrayList<Character>() ;
+			r.add('t');
+			r.add('e');
+			r.add('s');
+			assertTrue(testNCryptogram.getUniqueChars().equals(r));
+			ArrayList<Character> s = new ArrayList<Character>() ;
+			s.add('0');
+			s.add('1');
+			s.add('9');
+			assertTrue(testNCryptogram.getuniqueEncryptedChars().equals(s));
 		}
 	}
 
@@ -106,6 +134,7 @@ void testGame() throws IOException {
 	ArrayList<String> testData = new ArrayList(Files.readAllLines(Paths.get("Players/test")));
 	assertTrue(testData.get(0).equals("Test"));
 	assertTrue(testData.get(1).equals("123"));
+	
 	
 }
 }
