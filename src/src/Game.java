@@ -45,7 +45,7 @@ public class Game
 
 		while (!userInput.equals("generate"))
 		{
-			System.out.println("Invalid input, please type \"generate\" to start...\n");
+			System.out.println("\nInvalid input, please type \"generate\" to start...\n");
 			userInput = input.nextLine();
 
 			readInput(userInput, false);
@@ -179,7 +179,7 @@ public class Game
 		{
 			currentCharIndex--;
 			userGuesses.remove(cryptogram.getEncryptedChar(currentCharIndex));
-			System.out.println("Last action undone");
+			System.out.println("Last action undone.");
 		}
 	}
 	
@@ -189,7 +189,7 @@ public class Game
 	
 	private void clear() 
 	{
-		System.out.println("All actions cleared");
+		System.out.println("All actions cleared.");
 		currentCharIndex = 0;
 		userGuesses.clear();
 	}
@@ -418,10 +418,11 @@ public class Game
 	private static void loadGame(HashMap<Character, Character> userGuesses) throws IOException 
 	{
 		Scanner input = new Scanner(System.in);
-		System.out.println("Would you like to load previous game?");
+		System.out.println("Would you like to load the previous game? [Y/N]");
 		String userChoice = input.nextLine();
-		if(userChoice.equals("Y")) {
-			
+
+		if (userChoice.toUpperCase().equals("Y")) 
+		{
 			try 
 			{
 				ArrayList <String> x = fetchPrevGame("Players/prevGame");
@@ -478,10 +479,12 @@ public class Game
 	{
 		Game game = new Game();
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
+		
 		currentPlayer = fetchPlayers("Players/players");
 		cryptogram = new NumberCryptogram(phrase);
 		cryptogram.createMapping();
 		loadGame(userGuesses);
+		
 		game.start();
 	}
 }
