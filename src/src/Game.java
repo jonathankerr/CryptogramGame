@@ -14,9 +14,10 @@ public class Game
 { 
 	private static Player currentPlayer;
 	private static Cryptogram cryptogram;
+	private static Boolean ifSave = false;
 
 	private static HashMap<Character, Character> userGuesses;
-
+	private static String userName;
 	private static int currentCharIndex;
 
 	/** 
@@ -30,11 +31,12 @@ public class Game
 
 	/**
 	 * Starts the game and gets input from terminal.
+	 * @throws IOException 
 	 */
-	private void start() 
+	private void start() throws IOException 
 	{
 		System.out.println("\nHello " + currentPlayer.getUsername() + ", welcome to our cryptogram program!");
-		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"stats\"\n- \"exit\"\n- \"name\"\n");
+		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"stats\"\n- \"name\"\n- \"save\"\n- \"load\"\n- \"exit\"\n ");
 		System.out.println("Please type \"generate\" to start...\n");
 
 		Scanner input = new Scanner(System.in);
@@ -45,7 +47,8 @@ public class Game
 
 		while (!userInput.equals("generate"))
 		{
-			System.out.println("\nInvalid input, please type \"generate\" to start...\n");
+			System.out.println("");
+			System.out.println("Please type \"generate\" to start...\n");
 			userInput = input.nextLine();
 
 			readInput(userInput, false);
@@ -87,14 +90,14 @@ public class Game
 				
 			}
 		}
-
 		input.close();
 	}
 	
 	/**
 	 * Gets user input from terminal.
+	 * @throws IOException 
 	 */
-	private boolean readInput(String userInput, boolean inGame) 
+	private boolean readInput(String userInput, boolean inGame) throws IOException 
 	{
 		if (userInput.equals("undo"))
 		{
@@ -134,7 +137,16 @@ public class Game
 		{
 			exit();
 		}
-
+		else if (userInput.equals("save"))
+		{
+			save();
+			return true;
+		}
+		else if (userInput.equals("load"))
+		{
+			loadGame(userGuesses);
+			return true;
+		}
 		return false;
 	}
 
@@ -208,8 +220,8 @@ public class Game
 		System.out.format("| %-20s | %-4s |", "Correct guesses", player.getCorrectGuesses()); System.out.println();
 		System.out.format("| %-20s | %-4s |", "Accuracy:", (Integer.toString((int)player.getAccuracy()) + "%")); System.out.println();
 		System.out.println("+ All games: ----------+------+");
-		System.out.format("| %-20s | %-4s |", "Sessions:", player.getPlayedCryptograms()); System.out.println();
-		System.out.format("| %-20s | %-4s |", "Completed sessions:", player.getTotalGuesses()); System.out.println();
+		System.out.format("| %-20s | %-4s |", "Correct sessions:", player.getCompletedCryptograms()); System.out.println();
+		System.out.format("| %-20s | %-4s |", "Completed sessions:", player.getPlayedCryptograms()); System.out.println();
 		System.out.println("+----------------------+------+");
 	}
 
@@ -219,20 +231,20 @@ public class Game
 	private void changeUserName() 
 	{
 		Scanner input = new Scanner(System.in);
-		System.out.println("Your current user name is " + currentPlayer.getUsername());
+		System.out.println("Your name is " + currentPlayer.getUsername());
 		System.out.println("Would you like to change it? [Y/N]");
 		String userChoice = input.nextLine();
 
 		if (userChoice.toUpperCase().equals("Y")) 
 		{
-			System.out.println("Please enter a new username...\n");
+			System.out.println("Please enter a new name...\n");
 			String userName = input.nextLine();
 			currentPlayer.setUsername(userName);
-			System.out.println("Username changed to: \"" + currentPlayer.getUsername() + "\".\n");
+			System.out.println("Name changed to: \"" + currentPlayer.getUsername() + "\".\n");
 		}
 		else
 		{
-			System.out.println("Username has not beem changed.\n");
+			System.out.println("Name has not beem changed.\n");
 		}
 	}	
 
@@ -250,7 +262,7 @@ public class Game
 				System.out.println("You have successfully completed the cryptogram!");
 				currentPlayer.incrementPlayedCryptograms();
 				currentPlayer.incrementCompletedCryptograms();	
-				exit();
+				completesave();
 			}
 			else 
 			{
@@ -264,20 +276,78 @@ public class Game
 		return false;
 	}
 
+	private void completesave() {
+		String fileName  = "Players/" + userName;
+		try 
+		{
+			clearFile(fileName);
+			writeToFile(fileName, currentPlayer.getUsername());
+			writeToFileInt(fileName, currentPlayer.getCorrectGuesses());
+			writeToFileInt(fileName, currentPlayer.getTotalGuesses());
+			writeToFileInt(fileName, currentPlayer.getPlayedCryptograms());
+			writeToFileInt(fileName, currentPlayer.getCompletedCryptograms());
+			System.exit(0);
+		}
+		catch (IOException e) // If file not found
+		{
+			System.out.println("\nCannot find players files to save data lost all current data is lost.");
+			System.exit(0);
+		}
+		
+	} 
+	
+	private void save() {
+		Scanner input = new Scanner(System.in);
+		String userChoice = "";
+		if (ifSave) {
+		System.out.println("Would u like to save your game before exiting it will overwrite previous save [Y/N]");
+		userChoice = input.nextLine();
+		}
+		if (userChoice.toUpperCase().equals("Y") || ifSave == false) {
+		try 
+		{
+			String s = "";
+			String t = "";
+			for(Character c : userGuesses.keySet()) {
+			s = s +c;
+			t = t + userGuesses.get(c);
+			}
+			String ecrypt =cryptogram.getEncryptedPhrase();
+			String ecryptNoWhiteSpace = ecrypt.replaceAll("\\s","");
+			clearFile("Players/prevGame");
+			writeToFile("Players/prevGame",cryptogram.getPhrase());
+			writeToFile("Players/prevGame",ecryptNoWhiteSpace);
+			writeToFile("Players/prevGame",s);
+			writeToFile("Players/prevGame",t);
+			ifSave = true;
+		}
+		catch (IOException e) // If file not found
+		{
+			System.out.println("\nCannot find previous game file");
+		}
+		}
+		
+	}
+
 	/**
 	 * Runs when the game ends. Writes data of one player to a file.
 	 */
 	private void exit() 
 	{
+		String filenName = "Players/" + userName;
 		// Clears the file of any data then writes the players current data into file
+		Scanner input = new Scanner(System.in);
+		System.out.println("Would u like to save your game before exiting it will overwrite previous save [Y/N]");
+		String userChoice = input.nextLine();
+		if (userChoice.toUpperCase().equals("Y") ) {
 		try 
 		{
-			clearFile("Players/players");
-			writeToFile("Players/players", currentPlayer.getUsername());
-			writeToFileInt("Players/players", currentPlayer.getCorrectGuesses());
-			writeToFileInt("Players/players", currentPlayer.getTotalGuesses());
-			writeToFileInt("Players/players", currentPlayer.getPlayedCryptograms());
-			writeToFileInt("Players/players", currentPlayer.getCompletedCryptograms());
+			clearFile(filenName);
+			writeToFile(filenName, currentPlayer.getUsername());
+			writeToFileInt(filenName, currentPlayer.getCorrectGuesses());
+			writeToFileInt(filenName, currentPlayer.getTotalGuesses());
+			writeToFileInt(filenName, currentPlayer.getPlayedCryptograms());
+			writeToFileInt(filenName, currentPlayer.getCompletedCryptograms());
 			
 			String s = "";
 			String t = "";
@@ -292,6 +362,7 @@ public class Game
 			writeToFile("Players/prevGame",ecryptNoWhiteSpace);
 			writeToFile("Players/prevGame",s);
 			writeToFile("Players/prevGame",t);
+			System.exit(0);
 		}
 		catch (IOException e) // If file not found
 		{
@@ -300,6 +371,22 @@ public class Game
 		}
 		
 		System.exit(0);
+		}else {
+			try {
+			clearFile(filenName);
+			writeToFile(filenName, currentPlayer.getUsername());
+			writeToFileInt(filenName, currentPlayer.getCorrectGuesses());
+			writeToFileInt(filenName, currentPlayer.getTotalGuesses());
+			writeToFileInt(filenName, currentPlayer.getPlayedCryptograms());
+			writeToFileInt(filenName, currentPlayer.getCompletedCryptograms());
+			System.exit(0);
+			}
+			catch (IOException e) // If file not found
+			{
+				System.out.println("\nCannot find players files to save data lost all current data is lost.");
+				System.exit(0);
+			}
+		}
 	}
 
 	/**
@@ -340,6 +427,18 @@ public class Game
 		return phrase;
 	}
 
+	
+	
+	private static String getUsernameFromUser(){
+		Scanner input = new Scanner(System.in);
+		System.out.println("Please enter your username");
+		String username  = input.nextLine();
+		username = username.replaceAll("\\s+","");
+		return username;
+		
+	
+	}
+	
 	/**
 	 * Fetches a one player's data from a file.
 	 * 
@@ -347,10 +446,10 @@ public class Game
 	 * @return phrase to be encrypted and solved by user.
 	 * @throws IOException 
 	 */
-	private static Player fetchPlayers(String fileName) throws IOException 
+	private static Player fetchPlayers() throws IOException 
 	{
 		Player player = null;
-
+		String fileName = "Players/" + userName;
 		try 
 		{
 			ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
@@ -365,21 +464,21 @@ public class Game
 			player = new Player(playerData.get(0),x,x1,x2,x3); 
 			}
 			catch(java.lang.IndexOutOfBoundsException e) {
-				System.out.println("Insifficent Data in player file pls restart exit and relaunch ");
+				System.out.println("File corrupt player stats are reset");
 				
-				clearFile("Players/players");
-				writeToFile("Players/players", "User");
-				writeToFileInt("Players/players", 0);
-				writeToFileInt("Players/players", 0);
-				writeToFileInt("Players/players", 0);
-				writeToFileInt("Players/players", 0);
-				System.exit(0);
+				clearFile(fileName);
+				writeToFile(fileName, userName);
+				writeToFileInt(fileName, 0);
+				writeToFileInt(fileName, 0);
+				writeToFileInt(fileName, 0);
+				writeToFileInt(fileName, 0);
+				player = new Player(userName,0,0,0,0);
 			
 		}
 		catch (IOException e)
 		{
-			System.out.println("\nFile does not exist, or invalid file name.");
-			clearFile("Players/players");
+			System.out.println("\nPlayer file does not exist new file created please relaunch game and try again.");
+			clearFile(fileName);
 			System.exit(0);
 		}
 
@@ -391,19 +490,20 @@ public class Game
 		try
 		{
 			ArrayList<String> prevData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+			ifSave = true;
 			return prevData;
 		}
 		catch (java.lang.IndexOutOfBoundsException e) {
 			
-			System.out.println("No Previous sessions.");
-			clearFile("Players/prevG");
-			System.exit(0);
+			System.out.println("Corrupt file previous save lost.");
+			clearFile("Players/prevGame");
+			ifSave = false;
 		}
 		catch (IOException e)
 		{
 			System.out.println("No Previous sessions.");
 			clearFile("Players/prevGame");
-			System.exit(0);	
+			ifSave = false;
 		}
 
 		return null;
@@ -417,18 +517,19 @@ public class Game
 	 */
 	private static void loadGame(HashMap<Character, Character> userGuesses) throws IOException 
 	{
+		currentCharIndex = 0;
+		userGuesses.clear();
 		Scanner input = new Scanner(System.in);
 		System.out.println("Would you like to load the previous game? [Y/N]");
 		String userChoice = input.nextLine();
-
 		if (userChoice.toUpperCase().equals("Y")) 
 		{
 			try 
 			{
 				ArrayList <String> x = fetchPrevGame("Players/prevGame");
 				cryptogram.setPhrase(x.get(0));
-				cryptogram.setEncryptedPhrase(x.get(1),x.get(0));
-
+				cryptogram.setEncryptedPhrase(x.get(1));
+				currentCharIndex = 0;
 				for (int z = 0;z<x.get(2).length();z++)
 				{
 					userGuesses.put(x.get(2).charAt(z), x.get(3).charAt(z));
@@ -437,11 +538,16 @@ public class Game
 			}
 			catch (java.lang.IndexOutOfBoundsException e) 
 			{
-				System.out.println("No previous session.");
-				System.exit(0);
+				System.out.println("Corrupt file previous save lost.");
+				ifSave = false;
+				clearFile("Players/prevGame");
 			}
-		}
-	}
+			catch (java.lang.NullPointerException e) 
+			{
+				ifSave = false;
+				clearFile("Players/prevGame");
+			}
+	}}
 
 	/**
 	 * Writes a string in a file.
@@ -479,11 +585,10 @@ public class Game
 	{
 		Game game = new Game();
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
-		
-		currentPlayer = fetchPlayers("Players/players");
+		userName = getUsernameFromUser();
+		currentPlayer = fetchPlayers();
 		cryptogram = new NumberCryptogram(phrase);
 		cryptogram.createMapping();
-		loadGame(userGuesses);
 		
 		game.start();
 	}
