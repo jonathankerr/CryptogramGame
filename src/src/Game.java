@@ -528,7 +528,7 @@ public class Game
 			{
 				ArrayList <String> x = fetchPrevGame("Players/prevGame");
 				cryptogram.setPhrase(x.get(0));
-				cryptogram.setEncryptedPhrase(x.get(1));
+				//cryptogram.setEncryptedPhrase(x.get(1));
 				currentCharIndex = 0;
 				for (int z = 0;z<x.get(2).length();z++)
 				{
