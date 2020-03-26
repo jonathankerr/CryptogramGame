@@ -123,6 +123,18 @@ public class Game
 				System.out.println("You must be solving a cryptogram in order to use this command.");
 			}
 		}
+		else if (userInput.equals("answer"))
+		{
+			if (inGame)
+			{
+				answer();
+				return true;
+			}
+			else
+			{
+				System.out.println("You must be solving a cryptogram in order to use this command.");
+			}
+		}
 		else if (userInput.equals("stats"))
 		{
 			showStats(currentPlayer);
@@ -204,6 +216,18 @@ public class Game
 		System.out.println("All actions cleared.");
 		currentCharIndex = 0;
 		userGuesses.clear();
+	}
+	
+	/**
+	 * Gives the answer to the cryptogram.
+	 */
+	
+	private void answer() 
+	{
+		System.out.println("The answer was: " + cryptogram.getPhrase());
+		currentPlayer.incrementPlayedCryptograms();	
+		completesave();
+		
 	}
 
 	/**
@@ -528,7 +552,7 @@ public class Game
 			{
 				ArrayList <String> x = fetchPrevGame("Players/prevGame");
 				cryptogram.setPhrase(x.get(0));
-				//cryptogram.setEncryptedPhrase(x.get(1));
+				cryptogram.setEncryptedPhrase(x.get(1), userChoice);
 				currentCharIndex = 0;
 				for (int z = 0;z<x.get(2).length();z++)
 				{
