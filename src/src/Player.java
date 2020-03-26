@@ -1,7 +1,7 @@
 /**
  * Represents a user who plays the game.
  */
-public class Player 
+public class Player implements Comparable
 {
 	private String username;
 	private int correctGuesses;
@@ -18,6 +18,20 @@ public class Player
 	  playedCryptograms = k;
 	  completedCryptograms = l;
 	}
+	
+	@Override
+	public int compareTo(Object compPlayer) {
+		int compareScore =((Player)compPlayer).getCompletedCryptograms();
+		//return this.completedCryptograms-compareScore;
+		return compareScore-this.completedCryptograms;
+	}
+	
+    @Override
+    public String toString() {
+        return "Username: " + username + ", Completed Cryptograms: " + completedCryptograms + "";
+    }
+
+	
 	
 	public double getAccuracy()
 	{
@@ -94,4 +108,7 @@ public class Player
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+
+
 }
