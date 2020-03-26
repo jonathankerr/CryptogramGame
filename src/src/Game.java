@@ -1,11 +1,14 @@
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Map;
 
 /**
  * Main driver class to run game.
@@ -36,7 +39,7 @@ public class Game
 	private void start() throws IOException 
 	{
 		System.out.println("\nHello " + currentPlayer.getUsername() + ", welcome to our cryptogram program!");
-		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"answer\"\n- \"stats\"\n- \"name\"\n- \"save\"\n- \"load\"\n- \"exit\"\n ");
+		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"answer\"\n- \"top10\"\n- \"stats\"\n- \"name\"\n- \"save\"\n- \"load\"\n- \"exit\"\n ");
 		System.out.println("Please type \"generate\" to start...\n");
 
 		Scanner input = new Scanner(System.in);
@@ -159,6 +162,11 @@ public class Game
 			loadGame(userGuesses);
 			return true;
 		}
+		else if (userInput.equals("top10"))
+		{
+			getTop10();
+			return true;
+		}
 		return false;
 	}
 
@@ -227,6 +235,69 @@ public class Game
 		System.out.println("The answer was: " + cryptogram.getPhrase());
 		currentPlayer.incrementPlayedCryptograms();	
 		completesave();
+		
+	}
+	
+	/**
+	 * Gives the player a hint by giving them one letters mapping.
+	 */
+	
+	@SuppressWarnings("null")
+	private void getTop10() 
+	{
+        try { 
+        	String[] Names = null;
+        	Integer[] Scores = null;
+            File f = new File("Players"); 
+            Player player = null;
+            ArrayList<Player> allPlayers = new ArrayList();
+            
+            Map<String, Integer> map = new HashMap<String, Integer>();
+  
+            // Get all the names of the files present 
+            // in the directory 
+            File[] files = f.listFiles(); 
+  
+            System.out.println("Files are:"); 
+  
+            for (int i = 0; i < files.length; i++) { 
+            	if(files[i].getName().equals("prevGame")) {
+            		//do nothing with this file
+            	}
+            	else {
+	            		System.out.println(files[i].getName()); 
+	            		String fileName = "Players/" + files[i].getName();
+	                	ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+	                	String userName = playerData.get(0);
+	                	int completedCryptos = Integer.parseInt(playerData.get(4));
+	                	System.out.println(userName + " has completed: " + completedCryptos + " cryptograms");
+                	
+                	
+	
+            			//Converts Strings read from file to ints 
+            			int x = Integer.parseInt(playerData.get(1));
+            			int x1 = Integer.parseInt(playerData.get(2));
+            			int x2 = Integer.parseInt(playerData.get(3));
+            			int x3 = Integer.parseInt(playerData.get(4));
+            			
+            			// Constructs the current player object with information from file
+            			player = new Player(playerData.get(0),x,x1,x2,x3); 
+            			allPlayers.add(player);
+            		}
+           } 
+        System.out.println("USERNAME IS: " + allPlayers.get(0).getUsername());
+        System.out.println("USERNAME IS: " + allPlayers.get(1).getUsername());
+        Collections.sort(allPlayers);
+        
+        for(Player str: allPlayers) {
+        	System.out.println(str);
+        }
+        
+        } 
+        catch (Exception e) { 
+            System.err.println(e.getMessage()); 
+        } 
+		
 		
 	}
 
