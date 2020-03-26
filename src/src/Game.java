@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
+
+
 import java.util.Map;
 
 /**
@@ -258,19 +260,17 @@ public class Game
             // in the directory 
             File[] files = f.listFiles(); 
   
-            System.out.println("Files are:"); 
+            System.out.println("Top 10 Scores Are:"); 
   
             for (int i = 0; i < files.length; i++) { 
             	if(files[i].getName().equals("prevGame")) {
             		//do nothing with this file
             	}
             	else {
-	            		System.out.println(files[i].getName()); 
 	            		String fileName = "Players/" + files[i].getName();
 	                	ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
 	                	String userName = playerData.get(0);
 	                	int completedCryptos = Integer.parseInt(playerData.get(4));
-	                	System.out.println(userName + " has completed: " + completedCryptos + " cryptograms");
                 	
                 	
 	
@@ -285,13 +285,22 @@ public class Game
             			allPlayers.add(player);
             		}
            } 
-        System.out.println("USERNAME IS: " + allPlayers.get(0).getUsername());
-        System.out.println("USERNAME IS: " + allPlayers.get(1).getUsername());
         Collections.sort(allPlayers);
         
-        for(Player str: allPlayers) {
-        	System.out.println(str);
-        }
+        int count = 0;
+        loop:
+	        for(Player str: allPlayers) {
+	        	if(count == 9) {
+	        		break loop;
+	        	}
+	        	else {
+		        	System.out.println(str);
+		        	count++;
+	        	}
+	        }
+        
+        
+        
         
         } 
         catch (Exception e) { 
