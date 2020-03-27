@@ -477,18 +477,6 @@ public class Game
 	}
 
 	/**
-	 * Clears all data in file.
-	 */
-	public static void clearFile(String fileName) throws IOException 
-	{
-	    FileOutputStream outputStream = new FileOutputStream(fileName);
-		byte[] strToBytes = "".getBytes();
-		
-	    outputStream.write(strToBytes);
-	    outputStream.close();
-	}
-
-	/**
 	 * Fetches a random phrase from a file.
 	 * 
 	 * @param fileName name of the file.
@@ -634,33 +622,8 @@ public class Game
 				ifSave = false;
 				clearFile("Players/prevGame");
 			}
-	}}
-
-	/**
-	 * Writes a string in a file.
-	 */
-	public static void writeToFile(String fileName, String message) throws IOException 
-	{
-		String str = message;
-		FileOutputStream outputStream = new FileOutputStream(fileName, true);
-		byte[] strToBytes = str.getBytes();
-
-		outputStream.write(strToBytes);
-		outputStream.write(System.getProperty("line.separator").getBytes());
-		outputStream.close();
 	}
-
-	/**
-	 * Writes an integer to a file.
-	 */
-	public static void writeToFileInt(String fileName, int message) throws IOException 
-	{
-		FileOutputStream outputStream = new FileOutputStream(fileName, true);
-		
-	    outputStream.write(String.valueOf(message).getBytes());
-	    outputStream.write(System.getProperty("line.separator").getBytes());
-	    outputStream.close();
-	}
+}
 	
 	/**
 	 * Main method.

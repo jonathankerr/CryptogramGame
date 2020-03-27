@@ -35,28 +35,6 @@ public class Players
             
         } 
         */
-
-            try 
-            {
-                String s = "";
-                String t = "";
-                for(Character c : userGuesses.keySet()) {
-                s = s +c;
-                t = t + userGuesses.get(c);
-                }
-                String ecrypt =cryptogram.getEncryptedPhrase();
-                String ecryptNoWhiteSpace = ecrypt.replaceAll("\\s","");
-                clearFile("Players/prevGame");
-                writeToFile("Players/prevGame",cryptogram.getPhrase());
-                writeToFile("Players/prevGame",ecryptNoWhiteSpace);
-                writeToFile("Players/prevGame",s);
-                writeToFile("Players/prevGame",t);
-                ifSave = true;
-            }
-            catch (IOException e) // If file not found
-            {
-                System.out.println("\nCannot find previous game file");
-            }
     }
 
     public Player findPlayer(String userName)
