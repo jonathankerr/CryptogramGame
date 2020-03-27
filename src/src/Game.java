@@ -177,6 +177,18 @@ public class Game
 				System.out.println("You must be solving a cryptogram in order to use this command.");
 			}
 		}
+		else if (userInput.equals("hint"))
+		{
+			if (inGame)
+			{
+				hint();
+				return true;
+			}
+			else
+			{
+				System.out.println("You must be solving a cryptogram in order to use this command.");
+			}
+		}
 		else if (userInput.equals("stats"))
 		{
 			stats(currentPlayer);
@@ -283,6 +295,42 @@ public class Game
 		System.out.println("All actions cleared.");
 		currentCharIndex = 0;
 		userGuesses.clear();
+	}
+	
+	/**
+	 * Gives the user a hint..
+	 */
+	
+	private void hint() 
+	{
+		boolean alreadyHinted = false;
+		for(int i = 0; i< userGuesses.size(); i++) {
+			//char x6 = Character.toUpperCase(cryptogram.getChar(i));
+			char x6 = userGuesses.get(cryptogram.getEncryptedChar(i));
+			if(cryptogram.getChar(i) != x6) {// if an existing guess by the user is incorrect we  will change it.
+				alreadyHinted = true;
+				char answer = cryptogram.getChar(i);
+				userGuesses.replace(cryptogram.getEncryptedChar(i), answer);
+				System.out.println("You have guessed that: " + cryptogram.getEncryptedChar(i) + " was equal to: " + x6);
+				System.out.println("This is incorrect. " + cryptogram.getEncryptedChar(i) + " is actually equal to: " + cryptogram.getChar(i));
+				System.out.println("So we have changed that for you.");
+				currentPlayer.incrementTotalGuesses();
+			}
+		}
+		
+		if(!alreadyHinted) {
+			System.out.println("You are still to guess a character for " + cryptogram.getEncryptedChar(currentCharIndex));
+			System.out.println("We know that " + cryptogram.getEncryptedChar(currentCharIndex) + " is equal to " + cryptogram.getChar(currentCharIndex));
+			System.out.println("So we have sorted that for you.");
+			userGuesses.put(cryptogram.getEncryptedChar(currentCharIndex), cryptogram.getChar(currentCharIndex));
+			currentPlayer.incrementTotalGuesses();
+			currentCharIndex++;
+		}
+		
+		
+		//currentPlayer.incrementCorrectGuesses();
+		//currentCharIndex++;
+		//currentPlayer.incrementTotalGuesses();
 	}
 	
 	/**
@@ -455,7 +503,8 @@ public class Game
 				System.out.println("You have successfully completed the cryptogram!");
 				currentPlayer.incrementPlayedCryptograms();
 				currentPlayer.incrementCompletedCryptograms();	
-				completed();
+				currentPlayer.saveData();
+				System.exit(0);
 			}
 			else 
 			{
