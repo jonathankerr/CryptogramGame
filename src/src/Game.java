@@ -360,7 +360,7 @@ public class Game
 			System.out.println("+---+-------------+-------+");
 			System.out.println("| # | Player name | Score |");
 			System.out.println("+---+-------------+-------+");
-			for (int i = 0; i < players.size(); i++)
+			for (int i = 0; i < 10; i++)
 			{
 				System.out.format("| %-1s | %-11s | %-5s |", Integer.toString(i + 1), players.get(i).getUsername(), players.get(i).getCompletedCryptograms()); System.out.println();
 			}
