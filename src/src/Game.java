@@ -34,9 +34,8 @@ public class Game
 
 	/**
 	 * Starts the game and gets input from terminal.
-	 * @throws IOException 
 	 */
-	private void start() throws IOException 
+	private void start(String phrase) 
 	{
 		System.out.println("\nPlease enter your username...\n");
 
@@ -46,15 +45,14 @@ public class Game
 		getCurrentUser(userInput);
 		commands();
 		
-		System.out.println("Please type \"generate\" to start...\n");
+		System.out.println("Please type \"generate\", followed by either \"numbers\" or \"letters\" to start...\n");
 		
 		userInput = input.nextLine();
 		readInput(userInput, false);
 
-		while (!userInput.equals("generate"))
+		while (!userInput.toLowerCase().equals("generate numbers") && !userInput.toLowerCase().equals("generate letters"))
 		{
-			System.out.println("");
-			System.out.println("Please type \"generate\" to start...\n");
+			System.out.println("\nPlease type \"generate\", followed by either \"numbers\" or \"letters\" to start...\n");
 			userInput = input.nextLine();
 
 			readInput(userInput, false);
@@ -62,13 +60,24 @@ public class Game
 
 		System.out.println();
 
+		if (userInput.toLowerCase().contains("numbers"))
+		{
+			cryptogram = new NumberCryptogram(phrase);
+		}
+		else if (userInput.toLowerCase().contains("letters"))
+		{
+			cryptogram = new LetterCryptogram(phrase);
+		}
+
+		cryptogram.createMapping();
+
 		while (!completed())
 		{
 			System.out.print("\nCryptogram:");
 			System.out.println("\n" + cryptogram.getEncryptedPhrase());
 			getMapping();
 
-			System.out.println("Please enter a singular character value for cryptogram character \'" + cryptogram.getEncryptedChar(currentCharIndex) + "\'...\n");
+			System.out.println("Enter a singular character value for cryptogram character \'" + cryptogram.getEncryptedChar(currentCharIndex) + "\'...\n");
 
 			//input = new Scanner(System.in);
 			userInput = input.nextLine();
@@ -110,6 +119,7 @@ public class Game
 			{
 				System.out.println("\nWelcome back, " + players.getPlayer(userInput).getUsername());
 				load(players.getPlayer(userInput));
+				System.out.println();
 			}
 			else
 			{
@@ -126,9 +136,8 @@ public class Game
 	
 	/**
 	 * Gets user input from terminal.
-	 * @throws IOException 
 	 */
-	private boolean readInput(String userInput, boolean inGame) throws IOException 
+	private boolean readInput(String userInput, boolean inGame)
 	{
 		if (userInput.equals("undo"))
 		{
@@ -310,7 +319,7 @@ public class Game
 	{
 		Scanner input = new Scanner(System.in);
 
-		System.out.println("Would you like to load the previous game?\n[Y/N] ");
+		System.out.println("Would you like to load the previous game? [Y/N]\n");
 
 		String userInput = input.nextLine();
 		
@@ -437,7 +446,7 @@ public class Game
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("\nYour current username is: " + currentPlayer.getUsername() + "\n");
-		System.out.println("Would you like to change it?\n[Y/N] ");
+		System.out.println("Would you like to change it? [Y/N]\n");
 
 		String userInput = input.nextLine();
 
@@ -511,7 +520,7 @@ public class Game
 	{
 		Scanner input = new Scanner(System.in);
 			
-		System.out.println("Would you like to save your current session? This will override any previous session you might have saved. [Y/N]");
+		System.out.println("Would you like to save your current session? This will override any previous session you might have saved. [Y/N]\n");
 			
 		if (input.nextLine().toUpperCase().equals("Y"))
 		{
@@ -524,19 +533,8 @@ public class Game
 	 */
 	private void exit() 
 	{
-		Scanner input = new Scanner(System.in);
-
-		System.out.println("Would you like to save your current session? This will override any previous session you might have saved. [Y/N]");
-
-		if (input.nextLine().toUpperCase().equals("Y") ) 
-		{
-			currentPlayer.saveSession(cryptogram.getPhrase(), cryptogram.getEncryptedPhrase().replaceAll("\\s",""), userGuesses);
-			currentPlayer.saveData();
-		}
-		else 
-		{
-			currentPlayer.saveData();
-		}
+		save();
+		currentPlayer.saveData();
 
 		System.exit(0);
 	}
@@ -571,16 +569,12 @@ public class Game
 	 * Main method.
 	 * 
 	 * @param args command-line arguents.
-	 * @throws IOException 
 	 */
 	public static void main(String [] args) throws IOException
 	{
 		Game game = new Game();
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
 		
-		cryptogram = new NumberCryptogram(phrase);
-		cryptogram.createMapping();
-		
-		game.start();
+		game.start(phrase);
 	}
 }
