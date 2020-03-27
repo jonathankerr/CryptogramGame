@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+import java.io.File;
+import java.nio.file.Files;
 
 /**
  * Represents all users who play the game.
@@ -37,9 +38,24 @@ public class Players
         */
     }
 
-    public Player findPlayer(String userName)
+    public boolean fetchPlayers()
     {
-        return null;
+		File[] files = new File("Players/Users").listFiles(); 
+        
+        if (files.length > 0)
+        {
+            for (File file : files) 
+            {
+                ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+
+                Player player = new Player(playerData.get(0).toString(), Integer.parseInt(playerData.get(1)), Integer.parseInt(playerData.get(2)), Integer.parseInt(playerData.get(3)), Integer.parseInt(playerData.get(4)));
+                players.add(player);
+            }
+
+            return true;
+        }
+        
+        return false;
     }
 
     public int getTotalAccuracies()
