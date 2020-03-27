@@ -241,13 +241,13 @@ public class Game
 	}
 	
 	/**
-	 * Gives the player a hint by giving them one letters mapping.
+	 * Prints top 10 scores to console.
 	 */
-	
 	@SuppressWarnings("null")
 	private void getTop10() 
 	{
-        try { 
+		try 
+		{ 
         	String[] Names = null;
         	Integer[] Scores = null;
             File f = new File("Players"); 
@@ -262,52 +262,56 @@ public class Game
   
             System.out.println("Top 10 Scores Are:"); 
   
-            for (int i = 0; i < files.length; i++) { 
-            	if(files[i].getName().equals("prevGame")) {
+			for (int i = 0; i < files.length; i++) 
+			{ 
+				if (files[i].getName().equals("prevGame")) 
+				{
             		//do nothing with this file
             	}
-            	else {
-	            		String fileName = "Players/" + files[i].getName();
-	                	ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
-	                	String userName = playerData.get(0);
-	                	int completedCryptos = Integer.parseInt(playerData.get(4));
-                	
-                	
+				else 
+				{
+	           		String fileName = "Players/" + files[i].getName();
+	               	ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+	               	String userName = playerData.get(0);
+	               	int completedCryptos = Integer.parseInt(playerData.get(4));
 	
-            			//Converts Strings read from file to ints 
-            			int x = Integer.parseInt(playerData.get(1));
-            			int x1 = Integer.parseInt(playerData.get(2));
-            			int x2 = Integer.parseInt(playerData.get(3));
-            			int x3 = Integer.parseInt(playerData.get(4));
-            			
-            			// Constructs the current player object with information from file
-            			player = new Player(playerData.get(0),x,x1,x2,x3); 
-            			allPlayers.add(player);
-            		}
-           } 
-        Collections.sort(allPlayers);
+            		//Converts Strings read from file to ints 
+            		int x = Integer.parseInt(playerData.get(1));
+            		int x1 = Integer.parseInt(playerData.get(2));
+            		int x2 = Integer.parseInt(playerData.get(3));
+            		int x3 = Integer.parseInt(playerData.get(4));
+            		
+            		// Constructs the current player object with information from file
+            		player = new Player(playerData.get(0),x,x1,x2,x3); 
+            		allPlayers.add(player);
+            	}
+			} 
+			
+        	Collections.sort(allPlayers);
         
-        int count = 0;
-        loop:
-	        for(Player str: allPlayers) {
-	        	if(count == 9) {
-	        		break loop;
-	        	}
-	        	else {
-		        	System.out.println(str);
-		        	count++;
-	        	}
-	        }
-        
-        
-        
-        
+        	int count = 0;
+        	loop:
+	        	for(Player str: allPlayers) {
+	        		if (count == 9) {
+	        			break loop;
+	        		}
+	        		else {
+		        		System.out.println(str);
+		        		count++;
+	        		}
+				}
+				
+			System.out.println("+----------------------+------+");
+			System.out.println("| Player name          | Sco. |");
+			System.out.println("+----------------------+------+");
+			System.out.println("+ This game: ----------+------+");
+			System.out.format("| %-20s | %-4s |", "Guesses:", player.getTotalGuesses()); System.out.println();
+			System.out.println("+----------------------+------+");
         } 
-        catch (Exception e) { 
+		catch (Exception e) 
+		{ 
             System.err.println(e.getMessage()); 
         } 
-		
-		
 	}
 
 	/**
@@ -335,7 +339,7 @@ public class Game
 	private void changeUserName() 
 	{
 		Scanner input = new Scanner(System.in);
-		System.out.println("Your name is " + currentPlayer.getUsername());
+		System.out.println("Your username is: " + currentPlayer.getUsername());
 		System.out.println("Would you like to change it? [Y/N]");
 		String userChoice = input.nextLine();
 
@@ -344,7 +348,7 @@ public class Game
 			System.out.println("Please enter a new name...\n");
 			String userName = input.nextLine();
 			currentPlayer.setUsername(userName);
-			System.out.println("Name changed to: \"" + currentPlayer.getUsername() + "\".\n");
+			System.out.println("Username changed to: \"" + currentPlayer.getUsername() + "\".\n");
 		}
 		else
 		{
@@ -379,26 +383,6 @@ public class Game
 
 		return false;
 	}
-
-	private void completesave() {
-		String fileName  = "Players/" + userName;
-		try 
-		{
-			clearFile(fileName);
-			writeToFile(fileName, currentPlayer.getUsername());
-			writeToFileInt(fileName, currentPlayer.getCorrectGuesses());
-			writeToFileInt(fileName, currentPlayer.getTotalGuesses());
-			writeToFileInt(fileName, currentPlayer.getPlayedCryptograms());
-			writeToFileInt(fileName, currentPlayer.getCompletedCryptograms());
-			System.exit(0);
-		}
-		catch (IOException e) // If file not found
-		{
-			System.out.println("\nCannot find players files to save data lost all current data is lost.");
-			System.exit(0);
-		}
-		
-	} 
 	
 	private void save() {
 		Scanner input = new Scanner(System.in);
@@ -408,29 +392,28 @@ public class Game
 		userChoice = input.nextLine();
 		}
 		if (userChoice.toUpperCase().equals("Y") || ifSave == false) {
-		try 
-		{
-			String s = "";
-			String t = "";
-			for(Character c : userGuesses.keySet()) {
-			s = s +c;
-			t = t + userGuesses.get(c);
+			try 
+			{
+				String s = "";
+				String t = "";
+				for(Character c : userGuesses.keySet()) {
+				s = s +c;
+				t = t + userGuesses.get(c);
+				}
+				String ecrypt =cryptogram.getEncryptedPhrase();
+				String ecryptNoWhiteSpace = ecrypt.replaceAll("\\s","");
+				clearFile("Players/prevGame");
+				writeToFile("Players/prevGame",cryptogram.getPhrase());
+				writeToFile("Players/prevGame",ecryptNoWhiteSpace);
+				writeToFile("Players/prevGame",s);
+				writeToFile("Players/prevGame",t);
+				ifSave = true;
 			}
-			String ecrypt =cryptogram.getEncryptedPhrase();
-			String ecryptNoWhiteSpace = ecrypt.replaceAll("\\s","");
-			clearFile("Players/prevGame");
-			writeToFile("Players/prevGame",cryptogram.getPhrase());
-			writeToFile("Players/prevGame",ecryptNoWhiteSpace);
-			writeToFile("Players/prevGame",s);
-			writeToFile("Players/prevGame",t);
-			ifSave = true;
-		}
-		catch (IOException e) // If file not found
-		{
-			System.out.println("\nCannot find previous game file");
-		}
-		}
-		
+			catch (IOException e) // If file not found
+			{
+				System.out.println("\nCannot find previous game file");
+			}
+		}	
 	}
 
 	/**
