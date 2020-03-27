@@ -28,6 +28,11 @@ public class Players
         return player;
     }
 
+    public ArrayList<Player> getPlayers()
+    {
+        return players;
+    }
+
     public boolean fetchPlayers()
     {
 		File[] files = new File("Players/Users").listFiles(); 

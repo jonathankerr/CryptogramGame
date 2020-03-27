@@ -3,9 +3,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Main driver class to run game.
@@ -199,7 +202,7 @@ public class Game
 			
 			return true;
 		}
-		else if (userInput.equals("top10"))
+		else if (userInput.equals("top"))
 		{
 			top();
 			return true;
@@ -346,77 +349,28 @@ public class Game
 	/**
 	 * Prints top 10 scores to console.
 	 */
-	@SuppressWarnings("null")
 	private void top() 
 	{
-		/*
-		try 
-		{ 
-        	String[] Names = null;
-        	Integer[] Scores = null;
-            File f = new File("Players"); 
-            Player player = null;
-            ArrayList<Player> allPlayers = new ArrayList();
-            
-            Map<String, Integer> map = new HashMap<String, Integer>();
-  
-            // Get all the names of the files present 
-            // in the directory 
-            File[] files = f.listFiles(); 
-  
-            System.out.println("Top 10 Scores Are:"); 
-  
-			for (int i = 0; i < files.length; i++) 
-			{ 
-				if (files[i].getName().equals("prevGame")) 
-				{
-            		//do nothing with this file
-            	}
-				else 
-				{
-	           		String fileName = "Players/" + files[i].getName();
-	               	ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
-	               	String userName = playerData.get(0);
-	               	int completedCryptos = Integer.parseInt(playerData.get(4));
-	
-            		//Converts Strings read from file to ints 
-            		int x = Integer.parseInt(playerData.get(1));
-            		int x1 = Integer.parseInt(playerData.get(2));
-            		int x2 = Integer.parseInt(playerData.get(3));
-            		int x3 = Integer.parseInt(playerData.get(4));
-            		
-            		// Constructs the current player object with information from file
-            		player = new Player(playerData.get(0),x,x1,x2,x3); 
-            		allPlayers.add(player);
-            	}
-			} 
-			
-        	Collections.sort(allPlayers);
-        
-        	int count = 0;
-        	loop:
-	        	for(Player str: allPlayers) {
-	        		if (count == 9) {
-	        			break loop;
-	        		}
-	        		else {
-		        		System.out.println(str);
-		        		count++;
-	        		}
-				}
-				
-			System.out.println("+----------------------+------+");
-			System.out.println("| Player name          | Sco. |");
-			System.out.println("+----------------------+------+");
-			System.out.println("+ This game: ----------+------+");
-			System.out.format("| %-20s | %-4s |", "Guesses:", player.getTotalGuesses()); System.out.println();
-			System.out.println("+----------------------+------+");
-        } 
-		catch (Exception e) 
-		{ 
-            System.err.println(e.getMessage()); 
+		ArrayList<Player> players = this.players.getPlayers();
+		players = new ArrayList<Player>(players.stream().filter(x -> ((Player)x).getCompletedCryptograms() > 0).collect(Collectors.toList()));
+		Collections.sort(players);
+
+		if (players.size() > 0)
+		{
+			System.out.println("\nTop 10:");
+			System.out.println("+---+-------------+-------+");
+			System.out.println("| # | Player name | Score |");
+			System.out.println("+---+-------------+-------+");
+			for (int i = 0; i < players.size(); i++)
+			{
+				System.out.format("| %-1s | %-11s | %-5s |", Integer.toString(i + 1), players.get(i).getUsername(), players.get(i).getCompletedCryptograms()); System.out.println();
+			}
+			System.out.println("+---+-------------+-------+");
 		}
-		*/
+		else
+		{
+			System.out.println("No one has completed any cryptograms yet.");
+		}
 	}
 
 	/**
