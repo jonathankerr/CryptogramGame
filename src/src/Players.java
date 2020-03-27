@@ -25,32 +25,9 @@ public class Players
     {
         Player player = (Player)Arrays.stream(players.toArray()).filter(x -> ((Player)x).getUsername().equals(username)).findFirst().orElse(null);
 
-        return player;
-    }
+        System.out.println(player == null ? "null" : player.getUsername());
 
-    public void savePlayers()
-    {
-        /*
-        private void completesave() {
-            String fileName  = "Players/" + userName;
-            try 
-            {
-                clearFile(fileName);
-                writeToFile(fileName, currentPlayer.getUsername());
-                writeToFileInt(fileName, currentPlayer.getCorrectGuesses());
-                writeToFileInt(fileName, currentPlayer.getTotalGuesses());
-                writeToFileInt(fileName, currentPlayer.getPlayedCryptograms());
-                writeToFileInt(fileName, currentPlayer.getCompletedCryptograms());
-                System.exit(0);
-            }
-            catch (IOException e) // If file not found
-            {
-                System.out.println("\nCannot find players files to save data lost all current data is lost.");
-                System.exit(0);
-            }
-            
-        } 
-        */
+        return player;
     }
 
     public boolean fetchPlayers()
@@ -69,6 +46,8 @@ public class Players
                     {
                         playerData.add(fileReader.nextLine());
                     }
+
+                    fileReader.close();
                 }
                 catch (FileNotFoundException e)
                 { }

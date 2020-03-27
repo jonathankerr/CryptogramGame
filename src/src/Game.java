@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -107,6 +108,7 @@ public class Game
 		{
 			if (players.getPlayer(userInput) != null && players.getPlayer(userInput).getSession().size() != 0)
 			{
+				System.out.println("\nWelcome back, " + players.getPlayer(userInput).getUsername());
 				load(players.getPlayer(userInput));
 			}
 			else
@@ -166,7 +168,7 @@ public class Game
 		}
 		else if (userInput.equals("stats"))
 		{
-			showStats(currentPlayer);
+			stats(currentPlayer);
 			return true; 
 		}	
 		else if (userInput.equals("name"))
@@ -190,7 +192,7 @@ public class Game
 		}
 		else if (userInput.equals("top10"))
 		{
-			getTop10();
+			top();
 			return true;
 		}
 		else if (userInput.equals("commands"))
@@ -282,12 +284,45 @@ public class Game
 		currentPlayer.incrementPlayedCryptograms();	
 		completed();
 	}
+
+	/**
+	 * Loads the player's previous game, if it exists.
+	 *
+	 * @param userGuesses map representing player's guesses.
+	 */
+	private static void load(Player player)
+	{
+		Scanner input = new Scanner(System.in);
+
+		System.out.println("Would you like to load the previous game?\n[Y/N] ");
+
+		String userInput = input.nextLine();
+		
+		if (userInput.toUpperCase().equals("Y")) 
+		{
+			ArrayList<String> session = player.getSession();
+
+			if (session.size() > 0)
+			{
+				currentCharIndex = 0;
+				userGuesses.clear();
+				cryptogram.setPhrase(session.get(0));
+				cryptogram.setEncryptedPhrase(session.get(1), userInput);
+
+				for (int i = 0; i < session.get(2).length(); i++)
+				{
+					userGuesses.put(session.get(2).charAt(i), session.get(3).charAt(i));
+					currentCharIndex++;
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Prints top 10 scores to console.
 	 */
 	@SuppressWarnings("null")
-	private void getTop10() 
+	private void top() 
 	{
 		/*
 		try 
@@ -362,7 +397,7 @@ public class Game
 	/**
 	 * Shows the current player's statistics in tabular form.
 	 */
-	private static void showStats(Player player) 
+	private static void stats(Player player) 
 	{
 		System.out.println("\nHello, " + currentPlayer.getUsername() + ".");
 		System.out.println("+----------------------+------+");
@@ -384,20 +419,47 @@ public class Game
 	private void changeUserName() 
 	{
 		Scanner input = new Scanner(System.in);
-		System.out.println("Your username is: " + currentPlayer.getUsername());
-		System.out.println("Would you like to change it? [Y/N]");
-		String userChoice = input.nextLine();
 
-		if (userChoice.toUpperCase().equals("Y")) 
+		System.out.println("\nYour current username is: " + currentPlayer.getUsername() + "\n");
+		System.out.println("Would you like to change it?\n[Y/N] ");
+
+		String userInput = input.nextLine();
+
+		if (userInput.toUpperCase().equals("Y")) 
 		{
-			System.out.println("Please enter a new name...\n");
-			String userName = input.nextLine();
-			currentPlayer.setUsername(userName);
-			System.out.println("Username changed to: \"" + currentPlayer.getUsername() + "\".\n");
+			System.out.println("\nPlease enter a new username...\n");
+
+			String username = input.nextLine();
+			
+			if (players.getPlayer(username) == null)
+			{
+				if (currentPlayer.getSession().size() > 0)
+				{
+					try 
+					{
+						File session = new File("Players/Sessions/" + currentPlayer.getUsername());
+						File data = new File("Players/Users/" + currentPlayer.getUsername()); 
+						File newName = new File("Players/Sessions/" + username);
+						
+						session.renameTo(newName);
+						data.delete();
+					}
+					catch (Exception e)
+					{ }
+				}
+
+				currentPlayer.setUsername(username);
+
+				System.out.println("\nUsername changed to: \"" + username + "\".\n");
+			}
+			else
+			{
+				System.out.println("User with name \"" + username + "\" already exists.");
+			}
 		}
 		else
 		{
-			System.out.println("Name has not beem changed.\n");
+			System.out.println("Username has not been changed.\n");
 		}
 	}	
 
@@ -487,39 +549,6 @@ public class Game
 		}
 
 		return phrase;
-	}
-	
-	/**
-	 * Loads the player's previous game, if it exists.
-	 *
-	 * @param userGuesses map representing player's guesses.
-	 */
-	private static void load(Player player)
-	{
-		Scanner input = new Scanner(System.in);
-
-		System.out.println("Would you like to load the previous game? [Y/N]");
-
-		String userInput = input.nextLine();
-		
-		if (userInput.toUpperCase().equals("Y")) 
-		{
-			ArrayList<String> session = player.getSession();
-
-			if (session.size() > 0)
-			{
-				currentCharIndex = 0;
-				userGuesses.clear();
-				cryptogram.setPhrase(session.get(0));
-				cryptogram.setEncryptedPhrase(session.get(1), userInput);
-
-				for (int i = 0; i < session.get(2).length(); i++)
-				{
-					userGuesses.put(session.get(2).charAt(i), session.get(3).charAt(i));
-					currentCharIndex++;
-				}
-			}
-		}
 	}
 	
 	/**

@@ -159,6 +159,8 @@ public class Player implements Comparable
 			{
 				session.add(fileReader.nextLine());
 			}
+
+			fileReader.close();
 		}
 		catch (FileNotFoundException e)
 		{ }
