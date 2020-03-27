@@ -1,16 +1,10 @@
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
-
-
-import java.util.Map;
 
 /**
  * Main driver class to run game.
@@ -22,8 +16,10 @@ public class Game
 	private static Cryptogram cryptogram;
 
 	private static HashMap<Character, Character> userGuesses;
-	private static String userName;
 	private static int currentCharIndex;
+
+	private String[] commands = 
+	{ "commands", "undo", "clear", "name", "save", "load", "top", "frequency", "hint", "answer","exit" };
 
 	/** 
 	 * Class constructor.
@@ -46,28 +42,9 @@ public class Game
 		Scanner input = new Scanner(System.in);
 		String userInput = input.nextLine();
 
-		boolean hasPlayers = players.fetchPlayers();
-
-		if (hasPlayers)
-		{
-			if (players.getPlayer(userInput) != null)
-			{
-				loadGame(players.getPlayer(userInput));
-			}
-			else
-			{
-				players.addPlayer(new Player(userInput, 0, 0, 0, 0));
-			}
-		}
-		else
-		{
-			players.addPlayer(new Player(userInput, 0, 0, 0, 0));
-		}
-
-		currentPlayer = players.getPlayer(userInput);
-
-		System.out.println("\nHello " + currentPlayer.getUsername() + ", welcome to our cryptogram program!");
-		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"answer\"\n- \"top10\"\n- \"stats\"\n- \"name\"\n- \"save\"\n- \"load\"\n- \"exit\"\n ");
+		getCurrentUser(userInput);
+		commands();
+		
 		System.out.println("Please type \"generate\" to start...\n");
 		
 		userInput = input.nextLine();
@@ -118,7 +95,31 @@ public class Game
 				
 			}
 		}
+
 		input.close();
+	}
+
+	private void getCurrentUser(String userInput)
+	{
+		boolean hasPlayers = players.fetchPlayers();
+
+		if (hasPlayers)
+		{
+			if (players.getPlayer(userInput) != null && players.getPlayer(userInput).getSession().size() != 0)
+			{
+				load(players.getPlayer(userInput));
+			}
+			else
+			{
+				players.addPlayer(new Player(userInput, 0, 0, 0, 0));
+			}
+		}
+		else
+		{
+			players.addPlayer(new Player(userInput, 0, 0, 0, 0));
+		}
+
+		currentPlayer = players.getPlayer(userInput);
 	}
 	
 	/**
@@ -192,7 +193,27 @@ public class Game
 			getTop10();
 			return true;
 		}
+		else if (userInput.equals("commands"))
+		{
+			commands();
+			return true;
+		}
+
 		return false;
+	}
+
+	private void commands()
+	{
+		System.out.println("+-----------------------------+");
+		System.out.println("| Commands                    |");
+		System.out.println("+-----------------------------+");
+		for (int i = 1; i < commands.length; i++)
+		{
+			System.out.format("| %-27s |", commands[i]); System.out.println();
+		}
+		
+		System.out.println("+-----------------------------+");
+		System.out.println("Type \"commands\" to see this list again.\n");
 	}
 
 	/**
@@ -472,15 +493,16 @@ public class Game
 	 * Loads the player's previous game, if it exists.
 	 *
 	 * @param userGuesses map representing player's guesses.
-	 * @throws IOException
 	 */
-	private static void loadGame(Player player) throws IOException 
+	private static void load(Player player)
 	{
 		Scanner input = new Scanner(System.in);
 
 		System.out.println("Would you like to load the previous game? [Y/N]");
+
+		String userInput = input.nextLine();
 		
-		if (input.nextLine().toUpperCase().equals("Y")) 
+		if (userInput.toUpperCase().equals("Y")) 
 		{
 			ArrayList<String> session = player.getSession();
 
@@ -489,7 +511,7 @@ public class Game
 				currentCharIndex = 0;
 				userGuesses.clear();
 				cryptogram.setPhrase(session.get(0));
-				cryptogram.setEncryptedPhrase(session.get(1), input.nextLine());
+				cryptogram.setEncryptedPhrase(session.get(1), userInput);
 
 				for (int i = 0; i < session.get(2).length(); i++)
 				{

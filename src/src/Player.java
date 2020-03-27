@@ -1,12 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.Paths;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -156,14 +151,16 @@ public class Player implements Comparable
 	{
 		ArrayList<String> session = new ArrayList<>();
 
-		try (Scanner fileReader = new Scanner("Player/Sessions/" + username)) 
+		try
 		{
+			Scanner fileReader = new Scanner(new FileReader("Players/Sessions/" + username));
+			
 			while (fileReader.hasNextLine())
 			{
 				session.add(fileReader.nextLine());
 			}
 		}
-		catch (Exception e)
+		catch (FileNotFoundException e)
 		{ }
 
 		return session;

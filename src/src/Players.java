@@ -61,7 +61,7 @@ public class Players
         {
             for (File file : files) 
             {
-                ArrayList<String> playerData = new ArrayList<>();
+                ArrayList<String> playerData = new ArrayList<String>();
 
                 try (Scanner fileReader = new Scanner(file)) 
                 {
