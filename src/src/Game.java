@@ -2,9 +2,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -189,6 +191,18 @@ public class Game
 				System.out.println("You must be solving a cryptogram in order to use this command.");
 			}
 		}
+		else if (userInput.equals("frequency"))
+		{
+			if (inGame)
+			{
+				frequency();
+				return true;
+			}
+			else
+			{
+				System.out.println("You must be solving a cryptogram in order to use this command.");
+			}
+		}
 		else if (userInput.equals("stats"))
 		{
 			stats(currentPlayer);
@@ -295,6 +309,60 @@ public class Game
 		System.out.println("All actions cleared.");
 		currentCharIndex = 0;
 		userGuesses.clear();
+	}
+	
+	/**
+	 * Shows the letter frequencies.
+	 */
+	
+	private void frequency() 
+	{
+		int length = cryptogram.getPhrase().length();  //gets the real length
+		String str = cryptogram.getEncryptedPhrase(); //gets the actual encrypted phrase the user sees
+		HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+		str.trim();
+		
+		char[] chars = str.toCharArray();	
+		for(char c: chars) {   //loops through all chars
+			if(c == ' ') { //if blank then pass over
+				//do nothing
+			}
+			else {
+				if(map.containsKey(c)) { //if its already been mapped
+					map.replace(c, map.get(c), map.get(c) + 1);
+				}
+				else { //first time its been mapped
+					map.put(c, 1);
+				}
+			}
+		}
+		System.out.println("Frequencies in the cryprogram:");
+		
+		
+		for(Character c: map.keySet()) {  //loops through the hashmap
+			double percent = map.get(c);
+			percent = (percent / length) * 100; //converts the frequency to a percentage
+			percent = Double.parseDouble(new DecimalFormat("##.#").format(percent));  //limits the double to only 1 dp
+			System.out.println(c + " " + percent +"%");
+		}
+		
+		/*
+		 * English language frequencies taken from https://www3.nd.edu/~busiforc/handouts/cryptography/letterfrequencies.html
+		 */
+		
+		System.out.println("Frequencies in the english Language:");
+		System.out.println("E 11.6%");
+		System.out.println("A 8.4%");
+		System.out.println("R 7.5%");
+		System.out.println("I 7.5%");
+		System.out.println("O 7.1%");
+		System.out.println("T 6.9%");
+		System.out.println("N 6.6%");
+		System.out.println("S 5.7%");
+		System.out.println("L 5.4%");
+		System.out.println("C 4.5%");
+        
+		
 	}
 	
 	/**
