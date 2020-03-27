@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Paths;
@@ -120,8 +121,6 @@ public class Player implements Comparable
 
 	public void saveSession(String phrase, String encryptedPhrase, HashMap<Character, Character> userGuesses)
 	{
-		try 
-		{
 			String s = "";
 			String t = "";
 
@@ -134,23 +133,19 @@ public class Player implements Comparable
 			FileOutputStream outputStream;
 			try {
 				outputStream = new FileOutputStream("Players/Sessions/" + username, false);
+
+				outputStream.write(System.getProperty("line.separator").getBytes());
+				outputStream.write(encryptedPhrase.getBytes());
+				outputStream.write(System.getProperty("line.separator").getBytes());
+				outputStream.write(s.getBytes());
+				outputStream.write(System.getProperty("line.separator").getBytes());
+				outputStream.write(t.getBytes());
+				outputStream.write(System.getProperty("line.separator").getBytes());
+				outputStream.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.write(encryptedPhrase.getBytes());
-			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.write(s.getBytes());
-			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.write(t.getBytes());
-			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.close();
-		}
-		catch (FileNotFoundException e) // If file not found
-		{
-			System.out.println("Error.");
-		}
 	}
 
 	public ArrayList<String> getSession()
@@ -161,7 +156,7 @@ public class Player implements Comparable
 
 			return session;
 		}
-		catch (java.lang.IndexOutOfBoundsException e) 
+		catch (IOException e) // If file not found
 		{ }
 		
 		return null;
@@ -171,38 +166,21 @@ public class Player implements Comparable
 	{
 		try 
 		{
-			String s = "";
-			String t = "";
-
-			for (char c : userGuesses.keySet()) 
-			{
-				s += c;
-				t += userGuesses.get(c);
-			}
-
 			FileOutputStream outputStream = new FileOutputStream("Players/Users/" + username, false);
 	
 			outputStream.write(username.getBytes());
 			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.write(correctGuesses.getBytes());
+			outputStream.write(String.valueOf(correctGuesses).getBytes());
 			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.write(totalGuesses.getBytes());
+			outputStream.write(String.valueOf(totalGuesses).getBytes());
 			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.write(playedCryptograms.getBytes());
+			outputStream.write(String.valueOf(playedCryptograms).getBytes());
 			outputStream.write(System.getProperty("line.separator").getBytes());
-			outputStream.write(completedCryptograms.getBytes());
+			outputStream.write(String.valueOf(completedCryptograms).getBytes());
 			outputStream.write(System.getProperty("line.separator").getBytes());
 			outputStream.close();
 		}
 		catch (IOException e) // If file not found
-		{
-			System.out.println(
-
-@Override
-		public int compareTo(Object o) {
-			// TODO Auto-generated method stub
-			return 0;
-		}"Error.");
-		}
+		{ }
 	}
 }

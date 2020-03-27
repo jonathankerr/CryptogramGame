@@ -1,5 +1,9 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Represents all users who play the game.
@@ -46,7 +50,17 @@ public class Players
         {
             for (File file : files) 
             {
-                ArrayList<String> playerData = new ArrayList(Files.readAllLines(Paths.get(fileName)));
+                ArrayList<String> playerData = new ArrayList<>();
+
+                try (Scanner fileReader = new Scanner(file)) 
+                {
+                    while (fileReader.hasNextLine())
+                    {
+                        playerData.add(fileReader.nextLine());
+                    }
+                }
+                catch (FileNotFoundException e)
+                { }
 
                 Player player = new Player(playerData.get(0).toString(), Integer.parseInt(playerData.get(1)), Integer.parseInt(playerData.get(2)), Integer.parseInt(playerData.get(3)), Integer.parseInt(playerData.get(4)));
                 players.add(player);
