@@ -378,7 +378,7 @@ public class Game
 	 */
 	private static void stats(Player player) 
 	{
-		System.out.println("\nHello, " + currentPlayer.getUsername() + ".");
+		System.out.println("\nStats for " + currentPlayer.getUsername() + ":");
 		System.out.println("+----------------------+------+");
 		System.out.println("| Stats                | Val. |");
 		System.out.println("+----------------------+------+");
