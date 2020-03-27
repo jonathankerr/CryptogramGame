@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public class Game
 { 
+	private Players players;
 	private static Player currentPlayer;
 	private static Cryptogram cryptogram;
-	private static Boolean ifSave = false;
 
 	private static HashMap<Character, Character> userGuesses;
 	private static String userName;
@@ -31,6 +31,7 @@ public class Game
 	public Game()
 	{
 		userGuesses = new HashMap<Character, Character>();
+		players = new Players();
 		currentCharIndex = 0;
 	}
 
@@ -40,14 +41,36 @@ public class Game
 	 */
 	private void start() throws IOException 
 	{
-		System.out.println("\nHello " + currentPlayer.getUsername() + ", welcome to our cryptogram program!");
-		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"answer\"\n- \"top10\"\n- \"stats\"\n- \"name\"\n- \"save\"\n- \"load\"\n- \"exit\"\n ");
-		System.out.println("Please type \"generate\" to start...\n");
+		System.out.println("\nPlease enter your username...\n");
 
 		Scanner input = new Scanner(System.in);
 		String userInput = input.nextLine();
-		//input.close();
 
+		boolean hasPlayers = players.fetchPlayers();
+
+		if (hasPlayers)
+		{
+			if (players.getPlayer(userInput) != null)
+			{
+				loadGame(players.getPlayer(userInput));
+			}
+			else
+			{
+				players.addPlayer(new Player(userInput, 0, 0, 0, 0));
+			}
+		}
+		else
+		{
+			players.addPlayer(new Player(userInput, 0, 0, 0, 0));
+		}
+
+		currentPlayer = players.getPlayer(userInput);
+
+		System.out.println("\nHello " + currentPlayer.getUsername() + ", welcome to our cryptogram program!");
+		System.out.println("You can type the following commands:\n- \"undo\"\n- \"clear\"\n- \"answer\"\n- \"top10\"\n- \"stats\"\n- \"name\"\n- \"save\"\n- \"load\"\n- \"exit\"\n ");
+		System.out.println("Please type \"generate\" to start...\n");
+		
+		userInput = input.nextLine();
 		readInput(userInput, false);
 
 		while (!userInput.equals("generate"))
@@ -445,22 +468,13 @@ public class Game
 		return phrase;
 	}
 	
-	private static String getUsernameFromUser()
-	{
-		Scanner input = new Scanner(System.in);
-		System.out.println("Please enter your username");
-		String username  = input.nextLine();
-		username = username.replaceAll("\\s+","");
-		return username;
-	}
-	
 	/**
 	 * Loads the player's previous game, if it exists.
 	 *
 	 * @param userGuesses map representing player's guesses.
 	 * @throws IOException
 	 */
-	private static void loadGame(HashMap<Character, Character> userGuesses) throws IOException 
+	private static void loadGame(Player player) throws IOException 
 	{
 		Scanner input = new Scanner(System.in);
 
@@ -468,17 +482,20 @@ public class Game
 		
 		if (input.nextLine().toUpperCase().equals("Y")) 
 		{
-			ArrayList<String> session = currentPlayer.getSession();
+			ArrayList<String> session = player.getSession();
 
-			currentCharIndex = 0;
-			userGuesses.clear();
-			cryptogram.setPhrase(session.get(0));
-			cryptogram.setEncryptedPhrase(session.get(1), input.nextLine());
-
-			for (int i = 0; i < session.get(2).length(); i++)
+			if (session.size() > 0)
 			{
-				userGuesses.put(session.get(2).charAt(i), session.get(3).charAt(i));
-				currentCharIndex++;
+				currentCharIndex = 0;
+				userGuesses.clear();
+				cryptogram.setPhrase(session.get(0));
+				cryptogram.setEncryptedPhrase(session.get(1), input.nextLine());
+
+				for (int i = 0; i < session.get(2).length(); i++)
+				{
+					userGuesses.put(session.get(2).charAt(i), session.get(3).charAt(i));
+					currentCharIndex++;
+				}
 			}
 		}
 	}
@@ -493,8 +510,7 @@ public class Game
 	{
 		Game game = new Game();
 		String phrase = game.fetchPhrase("Phrases/phrases.txt");
-		userName = getUsernameFromUser();
-		//currentPlayer = fetchPlayers();
+		
 		cryptogram = new NumberCryptogram(phrase);
 		cryptogram.createMapping();
 		

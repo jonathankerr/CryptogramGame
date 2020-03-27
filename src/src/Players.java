@@ -1,7 +1,6 @@
+import java.util.Arrays;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,11 +9,23 @@ import java.util.Scanner;
  */
 public class Players
 {
-	ArrayList<Player> players;
+    ArrayList<Player> players;
+    
+    public Players()
+    {
+        players = new ArrayList<Player>();
+    }
 	
     public void addPlayer(Player player)
     {
         players.add(player);
+    }
+
+    public Player getPlayer(String username)
+    {
+        Player player = (Player)Arrays.stream(players.toArray()).filter(x -> ((Player)x).getUsername().equals(username)).findFirst().orElse(null);
+
+        return player;
     }
 
     public void savePlayers()
@@ -45,7 +56,7 @@ public class Players
     public boolean fetchPlayers()
     {
 		File[] files = new File("Players/Users").listFiles(); 
-        
+    
         if (files.length > 0)
         {
             for (File file : files) 

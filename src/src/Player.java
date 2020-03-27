@@ -1,11 +1,14 @@
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
@@ -134,6 +137,7 @@ public class Player implements Comparable
 			try {
 				outputStream = new FileOutputStream("Players/Sessions/" + username, false);
 
+				outputStream.write(phrase.getBytes());
 				outputStream.write(System.getProperty("line.separator").getBytes());
 				outputStream.write(encryptedPhrase.getBytes());
 				outputStream.write(System.getProperty("line.separator").getBytes());
@@ -150,16 +154,19 @@ public class Player implements Comparable
 
 	public ArrayList<String> getSession()
 	{
-		try
-		{
-			ArrayList<String> session = new ArrayList(Files.readAllLines(Paths.get("Players/Session/" + username)));
+		ArrayList<String> session = new ArrayList<>();
 
-			return session;
+		try (Scanner fileReader = new Scanner("Player/Sessions/" + username)) 
+		{
+			while (fileReader.hasNextLine())
+			{
+				session.add(fileReader.nextLine());
+			}
 		}
-		catch (IOException e) // If file not found
+		catch (Exception e)
 		{ }
-		
-		return null;
+
+		return session;
 	}
 
 	public void saveData()
