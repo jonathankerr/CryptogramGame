@@ -25,8 +25,6 @@ public class Players
     {
         Player player = (Player)Arrays.stream(players.toArray()).filter(x -> ((Player)x).getUsername().equals(username)).findFirst().orElse(null);
 
-        System.out.println(player == null ? "null" : player.getUsername());
-
         return player;
     }
 

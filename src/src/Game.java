@@ -64,7 +64,7 @@ public class Game
 
 		while (!completed())
 		{
-			System.out.print("\nYour cryptogram is:");
+			System.out.print("\nCryptogram:");
 			System.out.println("\n" + cryptogram.getEncryptedPhrase());
 			getMapping();
 
@@ -280,9 +280,25 @@ public class Game
 	
 	private void answer() 
 	{
-		System.out.println("The answer was: " + cryptogram.getPhrase());
+		System.out.println("Answer.");
+		System.out.println("\n" + cryptogram.getEncryptedPhrase());
+		for (int i = 0; i < cryptogram.getEncryptedPhrase().length(); i++) 
+		{
+			System.out.print('-');
+		}
+
+		System.out.println();
+
+		for (int i = 0; i < cryptogram.getEncryptedPhrase().toCharArray().length; i++) 
+		{
+			char output = cryptogram.getPhrase().replaceAll(".(?!$)", "$0 ").toCharArray()[i];
+			System.out.print(Character.toUpperCase(output));
+		}
+
+		System.out.println();
+	
 		currentPlayer.incrementPlayedCryptograms();	
-		completed();
+		System.exit(0);
 	}
 
 	/**
@@ -454,12 +470,12 @@ public class Game
 			}
 			else
 			{
-				System.out.println("User with name \"" + username + "\" already exists.");
+				System.out.println("\nUser with name \"" + username + "\" already exists. Username has not been changed.");
 			}
 		}
 		else
 		{
-			System.out.println("Username has not been changed.\n");
+			System.out.println("\nUsername has not been changed.\n");
 		}
 	}	
 
