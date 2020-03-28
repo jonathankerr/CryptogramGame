@@ -322,34 +322,42 @@ public class Game
 		HashMap<Character, Integer> map = new HashMap<Character, Integer>();
 		str.trim();
 		
-		char[] chars = str.toCharArray();	
-		for(char c: chars) {   //loops through all chars
-			if(c == ' ') { //if blank then pass over
-				//do nothing
-			}
-			else {
-				if(map.containsKey(c)) { //if its already been mapped
+		char[] chars = str.toCharArray();
+
+		for (char c: chars) //loops through all chars
+		{   
+			if (c != ' ') //if blank then pass over
+			{ 
+				if (map.containsKey(c)) //if its already been mapped
+				{ 
 					map.replace(c, map.get(c), map.get(c) + 1);
 				}
-				else { //first time its been mapped
+				else //first time its been mapped
+				{ 
 					map.put(c, 1);
 				}
 			}
 		}
-		System.out.println("Frequencies in the cryprogram:");
-		
-		
-		for(Character c: map.keySet()) {  //loops through the hashmap
-			double percent = map.get(c);
-			percent = (percent / length) * 100; //converts the frequency to a percentage
-			percent = Double.parseDouble(new DecimalFormat("##.#").format(percent));  //limits the double to only 1 dp
-			System.out.println(c + " " + percent +"%");
+
+		System.out.println("\nFrequencies:");
+		System.out.println("+-------+------+");
+		System.out.println("| Char. | %    |");
+		System.out.println("+-------+------+");
+
+		for (Character c: map.keySet())
+		{
+			double percentage = map.get(c);
+
+			percentage = (percentage / length) * 100; // Converts the frequency to a percentage
+			percentage = Double.parseDouble(new DecimalFormat("##.#").format(percentage));  // Limits the double to only 1 dp
+
+			System.out.format("| %-5s | %-2s |", c, Double.toString(percentage)); System.out.println();
 		}
+
+		System.out.println("+-------+------+");
 		
 		/*
 		 * English language frequencies taken from https://www3.nd.edu/~busiforc/handouts/cryptography/letterfrequencies.html
-		 */
-		
 		System.out.println("Frequencies in the english Language:");
 		System.out.println("E 11.6%");
 		System.out.println("A 8.4%");
@@ -361,8 +369,7 @@ public class Game
 		System.out.println("S 5.7%");
 		System.out.println("L 5.4%");
 		System.out.println("C 4.5%");
-        
-		
+		*/
 	}
 	
 	/**
@@ -476,10 +483,12 @@ public class Game
 			System.out.println("+---+-------------+-------+");
 			System.out.println("| # | Player name | Score |");
 			System.out.println("+---+-------------+-------+");
+
 			for (int i = 0; i < 10; i++)
 			{
 				System.out.format("| %-1s | %-11s | %-5s |", Integer.toString(i + 1), players.get(i).getUsername(), players.get(i).getCompletedCryptograms()); System.out.println();
 			}
+
 			System.out.println("+---+-------------+-------+");
 		}
 		else
