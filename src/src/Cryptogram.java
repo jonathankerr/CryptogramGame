@@ -68,7 +68,7 @@ public class Cryptogram
 	{
 		return encryptedPhrase.replaceAll(".(?!$)", "$0 ");
 	}
-	public void setEncryptedPhrase(String Phase,String nValues)
+	public void setEncryptedPhrase(String Phase)
 	{
 		ArrayList<Character> newUChars = makeUChars(Phase) ;
 		this.uniqueEncryptedChars = newUChars;

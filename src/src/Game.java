@@ -45,18 +45,19 @@ public class Game
 
 		Scanner input = new Scanner(System.in);
 		String userInput = input.nextLine();
+		boolean loadSave = getCurrentUser(userInput);
+		String saveText = loadSave ? ",\nor type \"load\" to load a previous save" : "";
 
-		getCurrentUser(userInput);
 		commands();
 		
-		System.out.println("Please type \"generate\", followed by either \"numbers\" or \"letters\" to start...\n");
+		System.out.println("Please type \"generate\", followed by either \"numbers\" or \"letters\" to generate a new cryptogram" + saveText + " to start...\n");
 		
 		userInput = input.nextLine();
 		readInput(userInput, false);
 
-		while (!userInput.toLowerCase().equals("generate numbers") && !userInput.toLowerCase().equals("generate letters"))
+		while (!userInput.toLowerCase().equals("generate numbers") && !userInput.toLowerCase().equals("generate letters") && !userInput.toLowerCase().equals("load"))
 		{
-			System.out.println("\nPlease type \"generate\", followed by either \"numbers\" or \"letters\" to start...\n");
+			System.out.println("Please type \"generate\", followed by either \"numbers\" or \"letters\" to generate a new cryptogram" + saveText + " to start...\n");
 			userInput = input.nextLine();
 
 			readInput(userInput, false);
@@ -64,14 +65,7 @@ public class Game
 
 		System.out.println();
 
-		if (userInput.toLowerCase().contains("numbers"))
-		{
-			cryptogram = new NumberCryptogram(phrase);
-		}
-		else if (userInput.toLowerCase().contains("letters"))
-		{
-			cryptogram = new LetterCryptogram(phrase);
-		}
+		generateCryptogram(userInput, phrase);
 
 		cryptogram.createMapping();
 
@@ -113,22 +107,15 @@ public class Game
 		input.close();
 	}
 
-	private void getCurrentUser(String userInput)
+	private boolean getCurrentUser(String userInput)
 	{
 		boolean hasPlayers = players.fetchPlayers();
 
-		if (hasPlayers)
+		if (hasPlayers && players.getPlayer(userInput) != null && players.getPlayer(userInput).getSession().size() != 0)
 		{
-			if (players.getPlayer(userInput) != null && players.getPlayer(userInput).getSession().size() != 0)
-			{
-				System.out.println("\nWelcome back, " + players.getPlayer(userInput).getUsername());
-				load(players.getPlayer(userInput));
-				System.out.println();
-			}
-			else
-			{
-				players.addPlayer(new Player(userInput, 0, 0, 0, 0));
-			}
+			System.out.println("\nWelcome back, " + players.getPlayer(userInput).getUsername() + ".\n");
+			currentPlayer = players.getPlayer(userInput);
+			return true;
 		}
 		else
 		{
@@ -136,6 +123,27 @@ public class Game
 		}
 
 		currentPlayer = players.getPlayer(userInput);
+
+		return false;
+	}
+
+	private void generateCryptogram(String userInput, String phrase)
+	{
+		if (userInput.toLowerCase().equals("load"))
+		{
+			load(currentPlayer);
+		}
+		else
+		{
+			if (userInput.toLowerCase().contains("numbers"))
+			{
+				cryptogram = new NumberCryptogram(phrase);
+			}
+			else if (userInput.toLowerCase().contains("letters"))
+			{
+				cryptogram = new LetterCryptogram(phrase);
+			}
+		}
 	}
 	
 	/**
@@ -224,7 +232,7 @@ public class Game
 		}
 		else if (userInput.equals("load"))
 		{
-			
+			load(currentPlayer);
 			return true;
 		}
 		else if (userInput.equals("top"))
@@ -454,10 +462,19 @@ public class Game
 
 			if (session.size() > 0)
 			{
+				if (Character.isDigit(session.get(0).toCharArray()[0]))
+				{
+					cryptogram = new NumberCryptogram(session.get(0));
+				}
+				else
+				{
+					cryptogram = new LetterCryptogram(session.get(0));
+				}
+
 				currentCharIndex = 0;
 				userGuesses.clear();
 				cryptogram.setPhrase(session.get(0));
-				cryptogram.setEncryptedPhrase(session.get(1), userInput);
+				cryptogram.setEncryptedPhrase(session.get(1));
 
 				for (int i = 0; i < session.get(2).length(); i++)
 				{
@@ -465,6 +482,10 @@ public class Game
 					currentCharIndex++;
 				}
 			}
+		}
+		else
+		{
+			System.out.println("No saves found.\n");
 		}
 	}
 	
